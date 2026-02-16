@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.pi.gestionprojet.controllers.InvestissementCardController"
+      spacing="8.0"
+      styleClass="card investissement-card">
+
+    <padding>
+        <Insets top="12" right="14" bottom="12" left="14"/>
+    </padding>
+
+    <HBox spacing="8.0" alignment="CENTER_LEFT">
+        <Label fx:id="projetLabel" styleClass="card-title"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statutLabel" styleClass="chip chip-status"/>
+    </HBox>
+
+    <HBox spacing="10.0">
+        <Label fx:id="montantLabel" styleClass="card-meta"/>
+        <Label fx:id="moyenLabel" styleClass="card-meta-light"/>
+    </HBox>
+
+    <Label fx:id="dateLabel" styleClass="card-meta-light"/>
+
+    <Label fx:id="palierLabel" styleClass="card-meta-light"/>
+
+    <Label fx:id="messageLabel" wrapText="true" styleClass="card-description"/>
+
+</VBox>
+
