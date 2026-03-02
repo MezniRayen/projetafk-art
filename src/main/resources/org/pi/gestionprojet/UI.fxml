@@ -34,6 +34,9 @@
             <ToggleButton fx:id="btnViewInvestissements" text="Mes investissements"
                           onAction="#onShowInvestissements"
                           styleClass="sidebar-button"/>
+            <ToggleButton fx:id="btnViewFavoris" text="Mes favoris"
+                          onAction="#onShowFavoris"
+                          styleClass="sidebar-button"/>
 
             <Separator/>
 
@@ -46,6 +49,13 @@
                     styleClass="ghost-button" maxWidth="Infinity"/>
             <Button text="Investir" fx:id="btnInvestir" onAction="#onInvestir"
                     styleClass="accent-button" maxWidth="Infinity"/>
+
+            <Button text="Ajouter aux favoris" fx:id="btnAddFavori"
+                    onAction="#onAddFavori"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+            <Button text="Retirer des favoris" fx:id="btnRemoveFavori"
+                    onAction="#onRemoveFavori"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
 
             <Separator/>
 
@@ -75,6 +85,18 @@
             <ScrollPane fx:id="investissementsScroll" fitToWidth="true" visible="false">
                 <content>
                     <FlowPane fx:id="investissementsContainer"
+                              hgap="20" vgap="20"
+                              styleClass="cards-container">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                    </FlowPane>
+                </content>
+            </ScrollPane>
+
+            <ScrollPane fx:id="favorisScroll" fitToWidth="true" visible="false">
+                <content>
+                    <FlowPane fx:id="favorisContainer"
                               hgap="20" vgap="20"
                               styleClass="cards-container">
                         <padding>

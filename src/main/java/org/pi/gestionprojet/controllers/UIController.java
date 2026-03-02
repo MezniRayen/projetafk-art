@@ -13,6 +13,7 @@ import org.pi.gestionprojet.entities.Investissement;
 import org.pi.gestionprojet.entities.ProjetArtistique;
 import org.pi.gestionprojet.service.InvestissementService;
 import org.pi.gestionprojet.service.ProjetArtistiqueService;
+import org.pi.gestionprojet.tools.GroqAIService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,6 +43,8 @@ public class UIController {
     private ToggleButton btnViewProjets;
     @FXML
     private ToggleButton btnViewInvestissements;
+    @FXML
+    private ToggleButton btnViewFavoris;
 
     private final ToggleGroup viewToggleGroup = new ToggleGroup();
 
@@ -49,11 +52,15 @@ public class UIController {
     private FlowPane projetsContainer;
     @FXML
     private FlowPane investissementsContainer;
+    @FXML
+    private FlowPane favorisContainer;
 
     @FXML
     private ScrollPane projetsScroll;
     @FXML
     private ScrollPane investissementsScroll;
+    @FXML
+    private ScrollPane favorisScroll;
 
     @FXML
     private Button btnNewProjet;
@@ -63,6 +70,10 @@ public class UIController {
     private Button btnDeleteProjet;
     @FXML
     private Button btnInvestir;
+    @FXML
+    private Button btnAddFavori;
+    @FXML
+    private Button btnRemoveFavori;
 
     @FXML
     private Button btnEditInvestissement;
@@ -71,6 +82,7 @@ public class UIController {
 
     private final List<ProjetArtistique> projetsData = new ArrayList<>();
     private final List<Investissement> investissementsData = new ArrayList<>();
+    private final List<ProjetArtistique> favorisData = new ArrayList<>();
 
     private Node selectedProjetCard;
     private ProjetArtistique selectedProjet;
@@ -83,6 +95,9 @@ public class UIController {
         // configure toggle group in code
         btnViewProjets.setToggleGroup(viewToggleGroup);
         btnViewInvestissements.setToggleGroup(viewToggleGroup);
+        if (btnViewFavoris != null) {
+            btnViewFavoris.setToggleGroup(viewToggleGroup);
+        }
         chooseInitialRole();
         showProjetsView();
     }
@@ -134,6 +149,10 @@ public class UIController {
 
             btnInvestir.setVisible(false);
             btnInvestir.setManaged(false);
+            btnAddFavori.setVisible(false);
+            btnAddFavori.setManaged(false);
+            btnRemoveFavori.setVisible(false);
+            btnRemoveFavori.setManaged(false);
 
             // L'artiste ne fait que consulter les investissements
             btnEditInvestissement.setVisible(false);
@@ -151,6 +170,10 @@ public class UIController {
 
             btnInvestir.setVisible(true);
             btnInvestir.setManaged(true);
+            btnAddFavori.setVisible(true);
+            btnAddFavori.setManaged(true);
+            btnRemoveFavori.setVisible(true);
+            btnRemoveFavori.setManaged(true);
 
             btnEditInvestissement.setVisible(true);
             btnEditInvestissement.setManaged(true);
@@ -162,6 +185,7 @@ public class UIController {
     private void reloadData() {
         projetsData.clear();
         investissementsData.clear();
+        favorisData.clear();
 
         if (currentRole == Role.ARTISTE) {
             projetsData.addAll(projetService.afficherParArtiste(ARTISTE_ID));
@@ -173,10 +197,13 @@ public class UIController {
             // investisseur voit tous les projets visibles
             projetsData.addAll(projetService.afficherEntite());
             investissementsData.addAll(investissementService.afficherParInvestisseur(INVESTISSEUR_ID));
+            favorisData.addAll(new org.pi.gestionprojet.service.FavoriService()
+                    .afficherFavorisParInvestisseur(INVESTISSEUR_ID));
         }
 
         refreshProjetCards();
         refreshInvestissementCards();
+        refreshFavorisCards();
     }
 
     private void refreshProjetCards() {
@@ -218,6 +245,28 @@ public class UIController {
                 card.setOnMouseClicked(e -> selectInvestissementCard(card, inv));
 
                 investissementsContainer.getChildren().add(card);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void refreshFavorisCards() {
+        if (favorisContainer == null) return;
+        favorisContainer.getChildren().clear();
+
+        for (ProjetArtistique p : favorisData) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/pi/gestionprojet/ProjetCard.fxml"));
+                Node card = loader.load();
+                ProjetCardController controller = loader.getController();
+                boolean isOwned = p.getIdArtiste() == ARTISTE_ID;
+                controller.setData(p, isOwned);
+
+                card.getStyleClass().add("clickable-card");
+                card.setOnMouseClicked(e -> selectProjetCard(card, p));
+
+                favorisContainer.getChildren().add(card);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -365,6 +414,34 @@ public class UIController {
     }
 
     @FXML
+    private void onAddFavori(ActionEvent event) {
+        if (currentRole != Role.INVESTISSEUR) {
+            return;
+        }
+        if (selectedProjet == null) {
+            showWarning("Veuillez sélectionner un projet à ajouter aux favoris.");
+            return;
+        }
+        org.pi.gestionprojet.service.FavoriService favoriService = new org.pi.gestionprojet.service.FavoriService();
+        favoriService.ajouterFavori(INVESTISSEUR_ID, selectedProjet.getIdProjet());
+        reloadData();
+    }
+
+    @FXML
+    private void onRemoveFavori(ActionEvent event) {
+        if (currentRole != Role.INVESTISSEUR) {
+            return;
+        }
+        if (selectedProjet == null) {
+            showWarning("Veuillez sélectionner un projet à retirer des favoris.");
+            return;
+        }
+        org.pi.gestionprojet.service.FavoriService favoriService = new org.pi.gestionprojet.service.FavoriService();
+        favoriService.supprimerFavori(INVESTISSEUR_ID, selectedProjet.getIdProjet());
+        reloadData();
+    }
+
+    @FXML
     private void onShowProjets(ActionEvent event) {
         showProjetsView();
     }
@@ -374,25 +451,53 @@ public class UIController {
         showInvestissementsView();
     }
 
+    @FXML
+    private void onShowFavoris(ActionEvent event) {
+        showFavorisView();
+    }
+
     private void showProjetsView() {
         projetsScroll.setVisible(true);
         investissementsScroll.setVisible(false);
+        favorisScroll.setVisible(false);
         if (btnViewProjets != null) {
             btnViewProjets.setSelected(true);
         }
         if (btnViewInvestissements != null) {
             btnViewInvestissements.setSelected(false);
         }
+        if (btnViewFavoris != null) {
+            btnViewFavoris.setSelected(false);
+        }
     }
 
     private void showInvestissementsView() {
         projetsScroll.setVisible(false);
         investissementsScroll.setVisible(true);
+        favorisScroll.setVisible(false);
         if (btnViewProjets != null) {
             btnViewProjets.setSelected(false);
         }
         if (btnViewInvestissements != null) {
             btnViewInvestissements.setSelected(true);
+        }
+        if (btnViewFavoris != null) {
+            btnViewFavoris.setSelected(false);
+        }
+    }
+
+    private void showFavorisView() {
+        projetsScroll.setVisible(false);
+        investissementsScroll.setVisible(false);
+        favorisScroll.setVisible(true);
+        if (btnViewProjets != null) {
+            btnViewProjets.setSelected(false);
+        }
+        if (btnViewInvestissements != null) {
+            btnViewInvestissements.setSelected(false);
+        }
+        if (btnViewFavoris != null) {
+            btnViewFavoris.setSelected(true);
         }
     }
 
@@ -405,6 +510,7 @@ public class UIController {
 
         TextField titreField = new TextField();
         TextArea descriptionArea = new TextArea();
+        descriptionArea.setPrefRowCount(5);
         TextField objectifField = new TextField();
         DatePicker dateCreationPicker = new DatePicker(LocalDate.now());
         DatePicker dateLimitePicker = new DatePicker();
@@ -427,11 +533,27 @@ public class UIController {
             visibleCheck.setSelected(true);
         }
 
+        Button aiButton = new Button("Suggérer la description avec l'IA");
+        aiButton.setOnAction(e -> {
+            String titre = titreField.getText().trim();
+            String draft = descriptionArea.getText().trim();
+            if (titre.isEmpty() && draft.isEmpty()) {
+                showWarning("Veuillez saisir au moins un titre ou un début de description avant d'utiliser l'IA.");
+                return;
+            }
+            try {
+                String suggestion = GroqAIService.suggestDescription(titre, draft);
+                descriptionArea.setText(suggestion);
+            } catch (Exception ex) {
+                showWarning("Impossible d'obtenir une suggestion de l'IA : " + ex.getMessage());
+            }
+        });
+
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.addRow(0, new Label("Titre*"), titreField);
-        grid.addRow(1, new Label("Description"), descriptionArea);
+        grid.addRow(1, new Label("Description"), new javafx.scene.layout.VBox(5, descriptionArea, aiButton));
         grid.addRow(2, new Label("Objectif financier*"), objectifField);
         grid.addRow(3, new Label("Date création*"), dateCreationPicker);
         grid.addRow(4, new Label("Date limite"), dateLimitePicker);

@@ -59,6 +59,18 @@ CREATE TABLE `projet_artistique` (
   `categorie` varchar(100) DEFAULT NULL
 ) ;
 
+-- --------------------------------------------------------
+--
+-- Table structure for table `favori_projet`
+--
+
+CREATE TABLE `favori_projet` (
+  `id_favori` int(11) NOT NULL,
+  `id_investisseur` int(11) NOT NULL,
+  `id_projet` int(11) NOT NULL,
+  `date_favori` datetime DEFAULT current_timestamp()
+) ;
+
 --
 -- Indexes for dumped tables
 --
@@ -77,6 +89,13 @@ ALTER TABLE `projet_artistique`
   ADD PRIMARY KEY (`id_projet`);
 
 --
+-- Indexes for table `favori_projet`
+--
+ALTER TABLE `favori_projet`
+  ADD PRIMARY KEY (`id_favori`),
+  ADD KEY `fk_favori_projet_projet` (`id_projet`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -93,6 +112,12 @@ ALTER TABLE `projet_artistique`
   MODIFY `id_projet` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `favori_projet`
+--
+ALTER TABLE `favori_projet`
+  MODIFY `id_favori` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -101,6 +126,11 @@ ALTER TABLE `projet_artistique`
 --
 ALTER TABLE `investissement`
   ADD CONSTRAINT `fk_investissement_projet` FOREIGN KEY (`id_projet`) REFERENCES `projet_artistique` (`id_projet`) ON DELETE CASCADE;
+--
+-- Constraints for table `favori_projet`
+--
+ALTER TABLE `favori_projet`
+  ADD CONSTRAINT `fk_favori_projet_projet` FOREIGN KEY (`id_projet`) REFERENCES `projet_artistique` (`id_projet`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

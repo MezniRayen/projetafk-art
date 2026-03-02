@@ -11,6 +11,8 @@ module org.pi.gestionprojet {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires java.net.http;
+    requires java.mail;
 
     opens org.pi.gestionprojet to javafx.fxml;
     opens org.pi.gestionprojet.controllers to javafx.fxml;

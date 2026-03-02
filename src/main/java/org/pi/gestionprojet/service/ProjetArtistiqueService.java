@@ -2,6 +2,8 @@ package org.pi.gestionprojet.service;
 
 import org.pi.gestionprojet.entities.ProjetArtistique;
 import org.pi.gestionprojet.tools.DBconnection;
+import org.pi.gestionprojet.tools.EmailService;
+
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -100,6 +102,12 @@ public class ProjetArtistiqueService implements ICrud<ProjetArtistique> {
             ps.setString(9, p.getCategorie());
             ps.setInt(10, p.getIdProjet());
             ps.executeUpdate();
+
+            // notifier les investisseurs qui ont ce projet en favori
+            FavoriService favoriService = new FavoriService();
+            if (favoriService.hasFavoriForProjet(p.getIdProjet())) {
+                EmailService.sendProjetUpdated(p);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,10 +115,15 @@ public class ProjetArtistiqueService implements ICrud<ProjetArtistique> {
 
     @Override
     public void supprimerEntite(ProjetArtistique p) {
+        boolean hasFavori = new org.pi.gestionprojet.service.FavoriService()
+                .hasFavoriForProjet(p.getIdProjet());
         String sql = "DELETE FROM projet_artistique WHERE id_projet = ?";
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, p.getIdProjet());
             ps.executeUpdate();
+            if (hasFavori) {
+                EmailService.sendProjetDeleted(p);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

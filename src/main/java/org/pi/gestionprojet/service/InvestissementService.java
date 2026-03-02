@@ -2,6 +2,7 @@ package org.pi.gestionprojet.service;
 
 import org.pi.gestionprojet.entities.Investissement;
 import org.pi.gestionprojet.tools.DBconnection;
+import org.pi.gestionprojet.tools.EmailService;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -39,6 +40,19 @@ public class InvestissementService implements ICrud<Investissement> {
 
             // mettre à jour le montant collecté du projet
             recalcMontantCollecte(inv.getIdProjet());
+
+            // notifier les investisseurs qui ont ce projet en favori
+            FavoriService favoriService = new FavoriService();
+            if (favoriService.hasFavoriForProjet(inv.getIdProjet())) {
+                // recharger quelques infos du projet pour le mail
+                ProjetArtistiqueService projetService = new ProjetArtistiqueService();
+                for (org.pi.gestionprojet.entities.ProjetArtistique p : projetService.afficherEntite()) {
+                    if (p.getIdProjet() == inv.getIdProjet()) {
+                        EmailService.sendNewInvestissement(p, inv);
+                        break;
+                    }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
