@@ -65,12 +65,26 @@
             <Button text="Supprimer investissement" fx:id="btnDeleteInvestissement"
                     onAction="#onDeleteInvestissement"
                     styleClass="ghost-button" maxWidth="Infinity"/>
+
+            <Separator/>
+
+            <Button text="Exporter investissements (CSV)" fx:id="btnExportInvestissementsCSV"
+                    onAction="#onExportInvestissementsCSV"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
         </VBox>
     </left>
 
     <center>
         <StackPane>
-            <ScrollPane fx:id="projetsScroll" fitToWidth="true" visible="true">
+            <VBox fx:id="projetsViewBox">
+                <HBox fx:id="searchBarBox" alignment="CENTER_LEFT" spacing="10.0" styleClass="search-bar">
+                    <padding>
+                        <Insets top="12" right="20" bottom="8" left="20"/>
+                    </padding>
+                    <Label text="Rechercher :" styleClass="sidebar-title"/>
+                    <TextField fx:id="searchProjetsField" promptText="Titre, catégorie, description..." prefWidth="280"/>
+                </HBox>
+                <ScrollPane fx:id="projetsScroll" fitToWidth="true" visible="true">
                 <content>
                     <FlowPane fx:id="projetsContainer"
                               hgap="20" vgap="20"
@@ -81,6 +95,7 @@
                     </FlowPane>
                 </content>
             </ScrollPane>
+            </VBox>
 
             <ScrollPane fx:id="investissementsScroll" fitToWidth="true" visible="false">
                 <content>

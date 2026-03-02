@@ -9,6 +9,14 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.format.DateTimeFormatter;
 import org.pi.gestionprojet.entities.Investissement;
 import org.pi.gestionprojet.entities.ProjetArtistique;
 import org.pi.gestionprojet.service.InvestissementService;
@@ -56,6 +64,8 @@ public class UIController {
     private FlowPane favorisContainer;
 
     @FXML
+    private javafx.scene.layout.VBox projetsViewBox;
+    @FXML
     private ScrollPane projetsScroll;
     @FXML
     private ScrollPane investissementsScroll;
@@ -79,6 +89,13 @@ public class UIController {
     private Button btnEditInvestissement;
     @FXML
     private Button btnDeleteInvestissement;
+    @FXML
+    private Button btnExportInvestissementsCSV;
+
+    @FXML
+    private TextField searchProjetsField;
+    @FXML
+    private javafx.scene.layout.HBox searchBarBox;
 
     private final List<ProjetArtistique> projetsData = new ArrayList<>();
     private final List<Investissement> investissementsData = new ArrayList<>();
@@ -97,6 +114,9 @@ public class UIController {
         btnViewInvestissements.setToggleGroup(viewToggleGroup);
         if (btnViewFavoris != null) {
             btnViewFavoris.setToggleGroup(viewToggleGroup);
+        }
+        if (searchProjetsField != null) {
+            searchProjetsField.textProperty().addListener((o, oldVal, newVal) -> refreshProjetCards());
         }
         chooseInitialRole();
         showProjetsView();
@@ -159,6 +179,15 @@ public class UIController {
             btnEditInvestissement.setManaged(false);
             btnDeleteInvestissement.setVisible(false);
             btnDeleteInvestissement.setManaged(false);
+
+            if (btnExportInvestissementsCSV != null) {
+                btnExportInvestissementsCSV.setVisible(true);
+                btnExportInvestissementsCSV.setManaged(true);
+            }
+            if (searchBarBox != null) {
+                searchBarBox.setVisible(false);
+                searchBarBox.setManaged(false);
+            }
         } else {
             // Investisseur : ne gère que ses investissements et l'action "Investir"
             btnNewProjet.setVisible(false);
@@ -179,6 +208,15 @@ public class UIController {
             btnEditInvestissement.setManaged(true);
             btnDeleteInvestissement.setVisible(true);
             btnDeleteInvestissement.setManaged(true);
+
+            if (btnExportInvestissementsCSV != null) {
+                btnExportInvestissementsCSV.setVisible(false);
+                btnExportInvestissementsCSV.setManaged(false);
+            }
+            if (searchBarBox != null) {
+                searchBarBox.setVisible(true);
+                searchBarBox.setManaged(true);
+            }
         }
     }
 
@@ -206,12 +244,34 @@ public class UIController {
         refreshFavorisCards();
     }
 
+    private List<ProjetArtistique> getFilteredProjetsForDisplay() {
+        if (currentRole != Role.INVESTISSEUR || searchProjetsField == null) {
+            return projetsData;
+        }
+        String q = searchProjetsField.getText();
+        if (q == null || (q = q.trim()).isEmpty()) {
+            return projetsData;
+        }
+        String lower = q.toLowerCase();
+        List<ProjetArtistique> filtered = new ArrayList<>();
+        for (ProjetArtistique p : projetsData) {
+            String titre = p.getTitre() != null ? p.getTitre() : "";
+            String cat = p.getCategorie() != null ? p.getCategorie() : "";
+            String desc = p.getDescription() != null ? p.getDescription() : "";
+            if (titre.toLowerCase().contains(lower) || cat.toLowerCase().contains(lower) || desc.toLowerCase().contains(lower)) {
+                filtered.add(p);
+            }
+        }
+        return filtered;
+    }
+
     private void refreshProjetCards() {
         projetsContainer.getChildren().clear();
         selectedProjet = null;
         selectedProjetCard = null;
 
-        for (ProjetArtistique p : projetsData) {
+        List<ProjetArtistique> toShow = getFilteredProjetsForDisplay();
+        for (ProjetArtistique p : toShow) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/pi/gestionprojet/ProjetCard.fxml"));
                 Node card = loader.load();
@@ -456,8 +516,68 @@ public class UIController {
         showFavorisView();
     }
 
+    @FXML
+    private void onExportInvestissementsCSV(ActionEvent event) {
+        if (currentRole != Role.ARTISTE) {
+            return;
+        }
+        if (investissementsData.isEmpty()) {
+            showWarning("Aucun investissement à exporter.");
+            return;
+        }
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Exporter les investissements en CSV");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV", "*.csv"));
+        chooser.setInitialFileName("investissements.csv");
+        File file = chooser.showSaveDialog(null);
+        if (file == null) {
+            return;
+        }
+        java.util.Map<Integer, String> projetTitres = new java.util.HashMap<>();
+        for (ProjetArtistique p : projetsData) {
+            projetTitres.put(p.getIdProjet(), p.getTitre() != null ? p.getTitre() : "");
+        }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        try (BufferedWriter w = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(file.toPath()), StandardCharsets.UTF_8))) {
+            w.write("\uFEFF"); // BOM for Excel UTF-8
+            w.write(escapeCsv("id_investissement") + "," + escapeCsv("id_projet") + "," + escapeCsv("titre_projet") + ","
+                    + escapeCsv("montant") + "," + escapeCsv("date_investissement") + "," + escapeCsv("moyen_paiement")
+                    + "," + escapeCsv("statut") + "," + escapeCsv("palier") + "," + escapeCsv("message_soutien"));
+            w.newLine();
+            for (Investissement inv : investissementsData) {
+                String titre = projetTitres.getOrDefault(inv.getIdProjet(), "");
+                String dateStr = inv.getDateInvestissement() != null ? inv.getDateInvestissement().format(dtf) : "";
+                String montantStr = inv.getMontant() != null ? inv.getMontant().toPlainString() : "";
+                w.write(escapeCsv(String.valueOf(inv.getIdInvestissement())) + "," + escapeCsv(String.valueOf(inv.getIdProjet())) + ","
+                        + escapeCsv(titre) + "," + escapeCsv(montantStr) + "," + escapeCsv(dateStr) + ","
+                        + escapeCsv(inv.getMoyenPaiement()) + "," + escapeCsv(inv.getStatut()) + ","
+                        + escapeCsv(inv.getPalier()) + "," + escapeCsv(inv.getMessageSoutien()));
+                w.newLine();
+            }
+        } catch (Exception e) {
+            showWarning("Erreur lors de l'export : " + e.getMessage());
+            return;
+        }
+        Alert info = new Alert(Alert.AlertType.INFORMATION);
+        info.setTitle("Export réussi");
+        info.setHeaderText(null);
+        info.setContentText("Fichier enregistré : " + file.getAbsolutePath());
+        info.showAndWait();
+    }
+
+    private static String escapeCsv(String value) {
+        if (value == null) return "\"\"";
+        if (value.contains("\"") || value.contains(",") || value.contains("\n") || value.contains("\r")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
+
     private void showProjetsView() {
-        projetsScroll.setVisible(true);
+        if (projetsViewBox != null) {
+            projetsViewBox.setVisible(true);
+            projetsViewBox.setManaged(true);
+        }
         investissementsScroll.setVisible(false);
         favorisScroll.setVisible(false);
         if (btnViewProjets != null) {
@@ -472,7 +592,10 @@ public class UIController {
     }
 
     private void showInvestissementsView() {
-        projetsScroll.setVisible(false);
+        if (projetsViewBox != null) {
+            projetsViewBox.setVisible(false);
+            projetsViewBox.setManaged(false);
+        }
         investissementsScroll.setVisible(true);
         favorisScroll.setVisible(false);
         if (btnViewProjets != null) {
@@ -487,7 +610,10 @@ public class UIController {
     }
 
     private void showFavorisView() {
-        projetsScroll.setVisible(false);
+        if (projetsViewBox != null) {
+            projetsViewBox.setVisible(false);
+            projetsViewBox.setManaged(false);
+        }
         investissementsScroll.setVisible(false);
         favorisScroll.setVisible(true);
         if (btnViewProjets != null) {
