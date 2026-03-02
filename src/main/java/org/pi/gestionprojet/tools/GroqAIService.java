@@ -10,7 +10,7 @@ public class GroqAIService {
 
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
     private static final String MODEL = "llama-3.1-8b-instant";
-    private static final String API_KEY = "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"; // paste your key here
+    private static final String API_KEY = ""; // paste your key here
 
     public static String suggestDescription(String title, String draft) throws Exception {
         String apiKey = API_KEY;
