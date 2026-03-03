@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.pi.gestionprojet.controllers.UIController"
+            prefHeight="700.0" prefWidth="1100.0"
+            styleClass="root-pane">
+
+    <top>
+        <HBox spacing="20.0" alignment="CENTER_LEFT" styleClass="header-bar">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            <Label text="Plateforme de financement artistique" styleClass="header-title"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="roleLabel" styleClass="role-label"/>
+            <Button text="Changer de rôle" onAction="#onChangeRoleClicked" styleClass="secondary-button"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="10.0" styleClass="sidebar">
+            <padding>
+                <Insets top="20" right="15" bottom="20" left="15"/>
+            </padding>
+            <Label text="Navigation" styleClass="sidebar-title"/>
+            <ToggleButton fx:id="btnViewProjets" text="Projets artistiques" selected="true"
+                          onAction="#onShowProjets"
+                          styleClass="sidebar-button"/>
+            <ToggleButton fx:id="btnViewInvestissements" text="Mes investissements"
+                          onAction="#onShowInvestissements"
+                          styleClass="sidebar-button"/>
+            <ToggleButton fx:id="btnViewFavoris" text="Mes favoris"
+                          onAction="#onShowFavoris"
+                          styleClass="sidebar-button"/>
+
+            <Separator/>
+
+            <Label text="Actions" styleClass="sidebar-title"/>
+            <Button text="Nouveau projet" fx:id="btnNewProjet" onAction="#onNewProjet"
+                    styleClass="primary-button" maxWidth="Infinity"/>
+            <Button text="Modifier projet" fx:id="btnEditProjet" onAction="#onEditProjet"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+            <Button text="Supprimer projet" fx:id="btnDeleteProjet" onAction="#onDeleteProjet"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+            <Button text="Investir" fx:id="btnInvestir" onAction="#onInvestir"
+                    styleClass="accent-button" maxWidth="Infinity"/>
+
+            <Button text="Ajouter aux favoris" fx:id="btnAddFavori"
+                    onAction="#onAddFavori"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+            <Button text="Retirer des favoris" fx:id="btnRemoveFavori"
+                    onAction="#onRemoveFavori"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+
+            <Separator/>
+
+            <Button text="Modifier investissement" fx:id="btnEditInvestissement"
+                    onAction="#onEditInvestissement"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+            <Button text="Supprimer investissement" fx:id="btnDeleteInvestissement"
+                    onAction="#onDeleteInvestissement"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+
+            <Separator/>
+
+            <Button text="Exporter investissements (CSV)" fx:id="btnExportInvestissementsCSV"
+                    onAction="#onExportInvestissementsCSV"
+                    styleClass="ghost-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane>
+            <VBox fx:id="projetsViewBox">
+                <HBox fx:id="searchBarBox" alignment="CENTER_LEFT" spacing="10.0" styleClass="search-bar">
+                    <padding>
+                        <Insets top="12" right="20" bottom="8" left="20"/>
+                    </padding>
+                    <Label text="Rechercher :" styleClass="sidebar-title"/>
+                    <TextField fx:id="searchProjetsField" promptText="Titre, catégorie, description..." prefWidth="280"/>
+                </HBox>
+                <ScrollPane fx:id="projetsScroll" fitToWidth="true" visible="true">
+                <content>
+                    <FlowPane fx:id="projetsContainer"
+                              hgap="20" vgap="20"
+                              styleClass="cards-container">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                    </FlowPane>
+                </content>
+            </ScrollPane>
+            </VBox>
+
+            <ScrollPane fx:id="investissementsScroll" fitToWidth="true" visible="false">
+                <content>
+                    <FlowPane fx:id="investissementsContainer"
+                              hgap="20" vgap="20"
+                              styleClass="cards-container">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                    </FlowPane>
+                </content>
+            </ScrollPane>
+
+            <ScrollPane fx:id="favorisScroll" fitToWidth="true" visible="false">
+                <content>
+                    <FlowPane fx:id="favorisContainer"
+                              hgap="20" vgap="20"
+                              styleClass="cards-container">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                    </FlowPane>
+                </content>
+            </ScrollPane>
+        </StackPane>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.pi.gestionprojet.controllers.ProjetCardController"
+      spacing="8.0"
+      styleClass="card projet-card">
+
+    <padding>
+        <Insets top="12" right="14" bottom="12" left="14"/>
+    </padding>
+
+    <HBox spacing="8.0" alignment="CENTER_LEFT">
+        <Label fx:id="titreLabel" styleClass="card-title"/>
+        <Label fx:id="categorieLabel" styleClass="chip chip-category"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statutLabel" styleClass="chip chip-status"/>
+    </HBox>
+
+    <Label fx:id="descriptionLabel" wrapText="true" styleClass="card-description"/>
+
+    <ProgressBar fx:id="progressBar" prefWidth="220"/>
+
+    <HBox spacing="10.0">
+        <Label fx:id="objectifLabel" styleClass="card-meta"/>
+        <Label fx:id="collecteLabel" styleClass="card-meta"/>
+    </HBox>
+
+    <HBox spacing="10.0">
+        <Label fx:id="datesLabel" styleClass="card-meta"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Label fx:id="ownerLabel" styleClass="card-owner"/>
+    </HBox>
+
+</VBox>
+
