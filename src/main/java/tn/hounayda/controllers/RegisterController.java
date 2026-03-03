@@ -10,6 +10,7 @@ import tn.hounayda.entities.UserRole;
 import tn.hounayda.entities.UserStatut;
 import tn.hounayda.services.EmailService;
 import tn.hounayda.services.UserService;
+import tn.hounayda.services.VerificationService;
 
 import java.io.IOException;
 
@@ -62,17 +63,22 @@ public class RegisterController {
 
             userService.createUser(user);
 
-            // Envoi de l'email de bienvenue
-            boolean emailSent = emailService.sendWelcomeEmail(user);
+// Générer le token et envoyer l'email
+            VerificationService verificationService = new VerificationService();
+            String token = verificationService.generateTokenForUser(user);
+
+// Tu peux passer le token dans l'email (modifie EmailService en conséquence)
+            boolean emailSent = emailService.sendWelcomeEmail(user, token);
 
             if (emailSent) {
                 showInfo("Succès",
                         "Compte créé avec succès !\n" +
-                                "Un email de bienvenue vous a été envoyé à : " + email);
+                                "Un email de vérification a été envoyé à : " + email + "\n" +
+                                "Cliquez sur le lien dans l'email pour activer votre compte.");
             } else {
                 showInfo("Succès",
                         "Compte créé avec succès !\n" +
-                                "(L'email de bienvenue n'a pas pu être envoyé)");
+                                "(L'email de vérification n'a pas pu être envoyé)");
             }
 
             goToLogin();

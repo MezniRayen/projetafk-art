@@ -57,7 +57,6 @@ public class ResetPasswordController {
             return;
         }
 
-        // Simuler l'envoi du code (par email)
         boolean success = resetService.requestResetByEmail(email);
 
         if (success) {
@@ -86,7 +85,6 @@ public class ResetPasswordController {
             return;
         }
 
-        // Le code est vérifié dans resetPassword avec l'email
         codeStatus.setText("Code valide !");
         codeStatus.setStyle("-fx-text-fill: #27ae60;");
 
@@ -123,19 +121,25 @@ public class ResetPasswordController {
         boolean success = resetService.resetPassword(currentEmail, code, newPass);
 
         if (success) {
-            // Afficher le succès
+            // Afficher le message de succès
             step3Box.setVisible(false);
             step3Box.setManaged(false);
 
             successMessage.setVisible(true);
             successMessage.setManaged(true);
-            successMessage.setText("✓ Mot de passe réinitialisé avec succès !\nVous pouvez maintenant vous connecter.");
+            successMessage.setText("✓ Mot de passe réinitialisé avec succès !\nRedirection vers la page de connexion...");
 
-            // Redirection automatique après 3 secondes
+            // Redirection automatique après 2 secondes
             new Thread(() -> {
                 try {
-                    Thread.sleep(3000);
-                    javafx.application.Platform.runLater(this::goToLogin);
+                    Thread.sleep(2000);
+                    javafx.application.Platform.runLater(() -> {
+                        try {
+                            goToLogin();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -158,6 +162,15 @@ public class ResetPasswordController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger la page de connexion");
         }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

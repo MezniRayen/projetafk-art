@@ -11,13 +11,14 @@ public class EmailService {
 
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
-    private static final String USERNAME = "votre.email@gmail.com"; // À configurer
-    private static final String PASSWORD = "votre-mot-de-passe"; // À configurer
+    private static final String USERNAME = "hounaida.bensaid@esprit.tn"; // À configurer
+    private static final String PASSWORD = "llen vpun xoni vlnq"; // À configurer
+    private static final String BASE_URL = "http://localhost:8080"; // Pour le développement
 
     /**
      * Envoie un email de bienvenue à un nouvel utilisateur
      */
-    public boolean sendWelcomeEmail(Users user) {
+    public boolean sendWelcomeEmail(Users user, String token) {
         String subject = "Bienvenue sur AFK'Art !";
         String content = buildWelcomeEmailContent(user);
 
@@ -34,12 +35,77 @@ public class EmailService {
         return sendEmail(email, subject, content);
     }
 
+    private String buildVerificationEmailContent(Users user) {
+        // Générer un token unique (tu peux utiliser l'ID + timestamp)
+        String verificationLink = BASE_URL + "/verify?userId=" + user.getIdUser() + "&token=" + generateToken(user);
+
+        return String.format(
+                "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<head>" +
+                        "<style>" +
+                        "body { font-family: Arial, sans-serif; background-color: #f8f5f0; padding: 20px; }" +
+                        ".container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
+                        ".header { text-align: center; margin-bottom: 30px; }" +
+                        ".header h1 { color: #4A3B2F; }" +
+                        ".content { color: #666; line-height: 1.6; }" +
+                        ".button { display: inline-block; padding: 12px 30px; background: linear-gradient(to bottom, #E38792, #D16F7F); color: white; text-decoration: none; border-radius: 25px; margin: 20px 0; font-weight: bold; }" +
+                        ".footer { margin-top: 30px; text-align: center; color: #999; font-size: 12px; }" +
+                        ".note { background-color: #f8f5f0; padding: 15px; border-radius: 8px; margin: 20px 0; }" +
+                        "</style>" +
+                        "</head>" +
+                        "<body>" +
+                        "<div class='container'>" +
+                        "<div class='header'>" +
+                        "<h1>Bienvenue sur AFK'Art !</h1>" +
+                        "</div>" +
+                        "<div class='content'>" +
+                        "<p>Bonjour <strong>%s %s</strong>,</p>" +
+                        "<p>Merci de vous être inscrit sur AFK'Art ! Pour profiter pleinement de toutes les fonctionnalités, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>" +
+                        "<div style='text-align: center;'>" +
+                        "<a href='%s' class='button'>✅ VÉRIFIER MON COMPTE</a>" +
+                        "</div>" +
+                        "<div class='note'>" +
+                        "<p><strong>Pourquoi vérifier votre compte ?</strong></p>" +
+                        "<ul>" +
+                        "<li>Participer aux actions artistiques</li>" +
+                        "<li>Recevoir des notifications</li>" +
+                        "<li>Accéder à toutes les fonctionnalités</li>" +
+                        "</ul>" +
+                        "</div>" +
+                        "<p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :</p>" +
+                        "<p style='word-break: break-all; font-size: 12px; color: #E38792;'>%s</p>" +
+                        "</div>" +
+                        "<div class='footer'>" +
+                        "<p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>" +
+                        "<p>© 2024 AFK'Art - Tous droits réservés</p>" +
+                        "</div>" +
+                        "</div>" +
+                        "</body>" +
+                        "</html>",
+                user.getPrenom(),
+                user.getNom(),
+                verificationLink,
+                verificationLink
+        );
+    }
+
+    private String generateToken(Users user) {
+        // Génère un token simple (à améliorer avec une vraie logique)
+        String rawToken = user.getIdUser() + "-" + user.getEmail() + "-" + System.currentTimeMillis();
+        return Integer.toHexString(rawToken.hashCode());
+    }
+
     private boolean sendEmail(String to, String subject, String content) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", SMTP_HOST);
         props.put("mail.smtp.port", SMTP_PORT);
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.checkserveridentity", "false");
+        props.put("mail.debug", "true");
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
@@ -56,12 +122,12 @@ public class EmailService {
             message.setContent(content, "text/html; charset=utf-8");
 
             Transport.send(message);
-            System.out.println("Email envoyé avec succès à : " + to);
+            System.out.println("✅ Email de vérification envoyé à : " + to);
             return true;
 
         } catch (MessagingException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors de l'envoi de l'email : " + e.getMessage());
+            System.err.println("❌ Erreur envoi email : " + e.getMessage());
             return false;
         }
     }

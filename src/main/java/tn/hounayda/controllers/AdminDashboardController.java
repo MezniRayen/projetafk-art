@@ -119,7 +119,7 @@ public class AdminDashboardController {
     @FXML
     private void goToActions() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin_action_cards.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin_add_action_card.fxml"));
             Node actionsView = loader.load();
             contentArea.getChildren().setAll(actionsView);
         } catch (IOException e) {
@@ -187,15 +187,14 @@ public class AdminDashboardController {
         alert.showAndWait();
     }
 
-    public void gotoNewUser(ActionEvent actionEvent) {  try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin_add_action_card.fxml"));
-        Scene scene = new Scene(loader.load(), 600, 400);
-        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-        stage.setScene(scene);
-        stage.setTitle("Connexion AFK'Art");
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
+    public void gotoNewUser(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user_cards_management.fxml"));
+            Node usersView = loader.load();
+            contentArea.getChildren().setAll(usersView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible de charger la gestion des utilisateurs");
+        }
     }
 }

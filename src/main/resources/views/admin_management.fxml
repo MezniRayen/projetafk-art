@@ -118,7 +118,7 @@
 
                 <!-- Boutons d'action rapide -->
                 <HBox spacing="15" alignment="CENTER">
-                    <Button text="➕ Nouvel Utilisateur"
+                    <Button text="➕ Liste Utilisateurs"
                             onAction="#gotoNewUser"
                             styleClass="primary-button"/>
                     <Button text="➕ Nouvelle Action"

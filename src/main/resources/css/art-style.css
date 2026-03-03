@@ -425,10 +425,7 @@
     -fx-border-width: 1;
 }
 
-.field-container:focused-within {
-    -fx-border-color: #E38792;
-    -fx-border-width: 2;
-}
+
 
 .modern-field {
     -fx-background-color: transparent;
@@ -530,4 +527,70 @@
 
 .secondary-button:hover {
     -fx-background-color: #D16F7F11;
+}
+
+.card investissement-card {
+}
+/* Dans art-style.css */
+
+/* Bouton favori */
+.favori-button {
+    -fx-background-radius: 5;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8 0;
+}
+
+.favori-button:hover {
+    -fx-opacity: 0.8;
+}
+
+/* Style pour les cartes sélectionnées */
+.card-selected {
+    -fx-effect: dropshadow(gaussian, #E38792, 10, 0.5, 0, 0);
+    -fx-border-color: #E38792;
+    -fx-border-width: 2;
+}
+
+/* Badges de statut */
+.chip {
+    -fx-background-radius: 12;
+    -fx-padding: 2 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.chip-status {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.chip-category {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+}
+
+/* Métadonnées des cartes */
+.card-meta {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+.card-meta-light {
+    -fx-font-size: 11px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.card-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: #34495e;
+    -fx-line-spacing: 2;
+}
+
+.card-owner {
+    -fx-font-size: 11px;
+    -fx-text-fill: #E38792;
+    -fx-font-weight: bold;
 }

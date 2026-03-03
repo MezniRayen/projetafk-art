@@ -6,26 +6,17 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
+      xmlns:fx="http://javafx.com/fxml/17"
       fx:controller="tn.hounayda.controllers.ProfileController"
       spacing="20.0"
       alignment="CENTER"
       stylesheets="@/css/art-style.css">
 
     <padding>
-        <Insets top="20" right="50" bottom="40" left="50"/>
+        <Insets top="40" right="50" bottom="40" left="50"/>
     </padding>
 
-    <!-- Barre de navigation avec bouton retour -->
-    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: transparent; -fx-padding: 0 0 10 0;">
-        <Button text="← Retour au tableau de bord"
-                onAction="#goToDashboard"
-                styleClass="secondary-button"
-                prefWidth="200"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Mon Profil AFK'Art" styleClass="header-title" alignment="CENTER"/>
-        <Region HBox.hgrow="ALWAYS"/>
-    </HBox>
+    <Label text="Mon Profil AFK'Art" styleClass="header-title" alignment="CENTER"/>
 
     <VBox spacing="20.0" styleClass="card" prefWidth="600">
 
@@ -40,10 +31,16 @@
         </HBox>
 
         <!-- Infos actuelles -->
-        <Label fx:id="fullNameLabel" styleClass="card-title"/>
-        <Label fx:id="emailLabel" styleClass="card-description"/>
-        <Label fx:id="roleLabel" style="-fx-font-weight: bold;"/>
-        <Label fx:id="statusLabel" style="-fx-font-weight: bold;"/>
+        <VBox spacing="8">
+            <Label fx:id="fullNameLabel" styleClass="card-title"/>
+            <Label fx:id="emailLabel" styleClass="card-description"/>
+            <HBox spacing="20">
+                <Label fx:id="roleLabel" style="-fx-font-weight: bold;"/>
+                <Label fx:id="statusLabel" style="-fx-font-weight: bold;"/>
+            </HBox>
+            <!-- Nouveau label pour le type utilisateur -->
+            <Label fx:id="typeUserLabel" style="-fx-font-weight: bold; -fx-text-fill: #E38792;"/>
+        </VBox>
 
         <!-- Formulaire modification -->
         <HBox spacing="16.0" alignment="CENTER_LEFT">
@@ -54,6 +51,12 @@
         <HBox spacing="16.0" alignment="CENTER_LEFT">
             <Label text="Nouveau prénom :" style="-fx-font-weight: bold;" prefWidth="120"/>
             <TextField fx:id="newPrenomField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <!-- Type d'utilisateur (visible seulement pour admin) -->
+        <HBox spacing="16.0" alignment="CENTER_LEFT" visible="false" managed="false">
+            <Label text="Type utilisateur :" style="-fx-font-weight: bold;" prefWidth="120"/>
+            <ComboBox fx:id="typeUserCombo" prefWidth="200"/>
         </HBox>
 
         <!-- Changement mot de passe -->
@@ -74,18 +77,10 @@
             <PasswordField fx:id="confirmPasswordField" HBox.hgrow="ALWAYS"/>
         </HBox>
 
-        <Button text="Enregistrer modifications"
-                onAction="#saveProfile"
-                styleClass="primary-button"
-                alignment="CENTER"
-                prefWidth="250"/>
+        <Button text="Enregistrer modifications" onAction="#saveProfile" styleClass="primary-button" alignment="CENTER"/>
 
     </VBox>
 
-    <Button text="Déconnexion"
-            onAction="#logout"
-            styleClass="secondary-button"
-            alignment="CENTER"
-            prefWidth="200"/>
+    <Button text="Déconnexion" onAction="#logout" styleClass="secondary-button" alignment="CENTER"/>
 
 </VBox>

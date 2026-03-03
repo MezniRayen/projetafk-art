@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -240,15 +241,34 @@ public class AdminActionController {
 
     @FXML
     private void showAddForm() {
-        selectedAction = null;
-        formTitle.setText("Nouvelle Action");
-        clearForm();
-        saveButton.setVisible(true);
-        saveButton.setManaged(true);
-        updateButton.setVisible(false);
-        updateButton.setManaged(false);
-        formContainer.setVisible(true);
-        formContainer.setManaged(true);
+        try {
+            // Vérifier que le fichier FXML existe
+            String fxmlPath = "/views/admin_add_action_card.fxml";
+            if (getClass().getResource(fxmlPath) == null) {
+                showError("Erreur", "Fichier FXML introuvable: " + fxmlPath);
+                return;
+            }
+
+            // Charger la vue
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent addActionView = loader.load();
+
+            // Remplacer le contenu de la scène actuelle
+            Stage stage = (Stage) actionsGrid.getScene().getWindow();
+            Scene currentScene = stage.getScene();
+
+            // Garder les mêmes dimensions
+            Scene newScene = new Scene(addActionView, currentScene.getWidth(), currentScene.getHeight());
+
+            // Copier le CSS si nécessaire
+            newScene.getStylesheets().addAll(currentScene.getStylesheets());
+
+            stage.setScene(newScene);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible de charger le formulaire d'ajout d'action: " + e.getMessage());
+        }
     }
 
     private void editAction(AdminAction action) {

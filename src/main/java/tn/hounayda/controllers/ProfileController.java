@@ -29,6 +29,8 @@ public class ProfileController {
     @FXML
     private Label statusLabel;
     @FXML
+    private Label typeUserLabel; // Nouveau label pour afficher le type (artiste/investisseur)
+    @FXML
     private TextField newNameField;
     @FXML
     private TextField newPrenomField;
@@ -39,7 +41,9 @@ public class ProfileController {
     @FXML
     private PasswordField confirmPasswordField;
     @FXML
-    private Label photoStatusLabel;  // ✅ Bien présent !
+    private Label photoStatusLabel;
+    @FXML
+    private ComboBox<String> typeUserCombo; // Pour modifier le type (admin seulement)
 
     private final UserService userService = new UserService();
     private Users currentUser;
@@ -59,6 +63,30 @@ public class ProfileController {
         roleLabel.setText("Rôle : " + currentUser.getRole());
         statusLabel.setText("Statut : " + currentUser.getStatut());
 
+        // Afficher le type d'utilisateur pour le module investissement
+        String typeText = "Type : ";
+        if (currentUser.getTypeUser() != null) {
+            switch (currentUser.getTypeUser()) {
+                case "ARTISTE": typeText += "Artiste"; break;
+                case "INVESTISSEUR": typeText += "Investisseur"; break;
+                case "LES_DEUX": typeText += "Artiste & Investisseur"; break;
+                default: typeText += "Non défini";
+            }
+        } else {
+            typeText += "Non défini";
+        }
+
+        if (typeUserLabel != null) {
+            typeUserLabel.setText(typeText);
+        }
+
+        // Si l'utilisateur est admin, afficher le ComboBox pour modifier le type
+        if (Session.getInstance().isAdmin() && typeUserCombo != null) {
+            typeUserCombo.setVisible(true);
+            typeUserCombo.getItems().addAll("ARTISTE", "INVESTISSEUR", "LES_DEUX");
+            typeUserCombo.setValue(currentUser.getTypeUser());
+        }
+
         // Charge la photo de profil si elle existe
         loadProfileImage();
 
@@ -76,25 +104,19 @@ public class ProfileController {
                 String imagePath = currentUser.getProfilePicture();
                 Image image = null;
 
-                // Essayer différents chemins possibles
                 if (imagePath.startsWith("http")) {
-                    // URL distante
                     image = new Image(imagePath, true);
                 } else if (imagePath.startsWith("file:")) {
-                    // Chemin absolu
                     image = new Image(imagePath, true);
                 } else if (imagePath.startsWith("/")) {
-                    // Ressource dans le classpath
                     image = new Image(getClass().getResourceAsStream(imagePath));
                 } else {
-                    // Chemin relatif - essayer comme ressource
                     image = new Image(getClass().getResourceAsStream("/" + imagePath));
                 }
 
                 if (image != null && !image.isError()) {
                     profileImageView.setImage(image);
                 } else {
-                    // Image par défaut si la ressource n'existe pas
                     setDefaultImage();
                 }
             } catch (Exception e) {
@@ -108,11 +130,9 @@ public class ProfileController {
 
     private void setDefaultImage() {
         try {
-            // Image par défaut (placez une image par défaut dans vos ressources)
             Image defaultImage = new Image(getClass().getResourceAsStream("/images/default-profile.png"));
             profileImageView.setImage(defaultImage);
         } catch (Exception e) {
-            // Pas d'image par défaut, laisser vide
             profileImageView.setImage(null);
         }
     }
@@ -135,7 +155,6 @@ public class ProfileController {
                 String url = userService.uploadProfilePicture(currentUser, selectedFile);
 
                 if (url != null) {
-                    // Recharger l'image depuis le fichier
                     Image newImage = new Image(selectedFile.toURI().toString());
                     profileImageView.setImage(newImage);
 
@@ -172,6 +191,11 @@ public class ProfileController {
             currentUser.setNom(nouveauNom);
             currentUser.setPrenom(nouveauPrenom);
 
+            // Mise à jour du type d'utilisateur (si admin et combo visible)
+            if (Session.getInstance().isAdmin() && typeUserCombo != null && typeUserCombo.getValue() != null) {
+                currentUser.setTypeUser(typeUserCombo.getValue());
+            }
+
             // Mise à jour mot de passe (si rempli)
             String oldPass = oldPasswordField.getText();
             String newPass = newPasswordField.getText();
@@ -180,7 +204,6 @@ public class ProfileController {
             boolean passwordChanged = false;
 
             if (!oldPass.isEmpty() || !newPass.isEmpty() || !confirmPass.isEmpty()) {
-                // Valider que tous les champs sont remplis
                 if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
                     showError("Erreur", "Tous les champs de mot de passe doivent être remplis");
                     return;
@@ -196,7 +219,6 @@ public class ProfileController {
                     return;
                 }
 
-                // Changer le mot de passe
                 passwordChanged = userService.changePassword(
                         currentUser.getIdUser(),
                         oldPass,
@@ -210,10 +232,8 @@ public class ProfileController {
                 }
             }
 
-            // Mettre à jour le reste du profil
             userService.updateUser(currentUser);
 
-            // Rafraîchit l'affichage
             fullNameLabel.setText(currentUser.getNom() + " " + currentUser.getPrenom());
 
             String message = "Profil mis à jour";
@@ -222,12 +242,10 @@ public class ProfileController {
             }
             showInfo("Succès", message);
 
-            // Vide les champs mot de passe
             oldPasswordField.clear();
             newPasswordField.clear();
             confirmPasswordField.clear();
 
-            // Met à jour la session
             Session.getInstance().login(currentUser);
 
         } catch (IllegalArgumentException e) {
@@ -254,21 +272,6 @@ public class ProfileController {
         }
     }
 
-    private void showError(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
     @FXML
     private void goToDashboard() {
         try {
@@ -276,7 +279,7 @@ public class ProfileController {
             String title;
 
             if (Session.getInstance().isAdmin()) {
-                fxmlPath = "/views/admin_dashboard.fxml";
+                fxmlPath = "/views/admin_management.fxml";
                 title = "Administration AFK'Art";
             } else {
                 fxmlPath = "/views/user_management.fxml";
@@ -294,7 +297,8 @@ public class ProfileController {
             showAlert("Erreur", "Impossible de charger le tableau de bord");
         }
     }
-    private void showAlert(String title, String message) {
+
+    private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -302,5 +306,19 @@ public class ProfileController {
         alert.showAndWait();
     }
 
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

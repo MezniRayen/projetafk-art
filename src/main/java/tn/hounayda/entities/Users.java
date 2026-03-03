@@ -15,7 +15,7 @@ public class Users {
     private Date lastLogin;
     private boolean isVerified;
     private String profilePicture;
-
+    private String typeUser;
     // Constantes pour les validations
     private static final int MIN_NAME_LENGTH = 2;
     private static final int MAX_NAME_LENGTH = 50;
@@ -190,7 +190,26 @@ public class Users {
         validatePrenom(prenom);
         this.prenom = prenom.trim();
     }
+    public String getTypeUser() {
+        return typeUser;
+    }
 
+    public void setTypeUser(String typeUser) {
+        this.typeUser = typeUser;
+    }
+
+    // Méthodes utilitaires
+    public boolean isArtiste() {
+        return "ARTISTE".equals(typeUser) || "LES_DEUX".equals(typeUser);
+    }
+
+    public boolean isInvestisseur() {
+        return "INVESTISSEUR".equals(typeUser) || "LES_DEUX".equals(typeUser);
+    }
+
+    public boolean isAdmin() {
+        return role == UserRole.ADMIN;
+    }
     public String getEmail() {
         return email;
     }
@@ -288,9 +307,7 @@ public class Users {
         return statut == UserStatut.ACTIF;
     }
 
-    public boolean isAdmin() {
-        return role == UserRole.ADMIN;
-    }
+
 
     @Override
     public String toString() {
@@ -303,5 +320,8 @@ public class Users {
                 ", statut=" + statut +
                 ", isVerified=" + isVerified +
                 '}';
+    }
+
+    public Object isUser() {
     }
 }

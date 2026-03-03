@@ -23,7 +23,7 @@
             <VBox spacing="8" alignment="CENTER" styleClass="user-info-card">
                 <Label text="👤" style="-fx-font-size: 40px; -fx-text-fill: #4A3B2F;"/>
                 <Label fx:id="welcomeLabel" styleClass="user-name"/>
-                <Label text="Utilisateur" styleClass="user-role"/>
+                <Label fx:id="userTypeLabel" styleClass="user-role" text="Utilisateur"/>
             </VBox>
 
             <Separator styleClass="sidebar-separator"/>
@@ -42,17 +42,22 @@
                         prefWidth="220"
                         alignment="CENTER_LEFT"/>
 
-                <Button text="⭐ Mes Favoris"
-                        onAction="#goToFavorites"
+                <!-- Bouton dynamique (change selon le type) -->
+                <Button fx:id="dynamicButton"
+                        text="⭐ Définir mon rôle"
+                        onAction="#handleDynamicButton"
                         styleClass="nav-button"
                         prefWidth="220"
                         alignment="CENTER_LEFT"/>
 
-                <Button text="📅 Mes Participations"
-                        onAction="#goToParticipations"
+                <!-- Bouton Financement (visible seulement pour "LES_DEUX") -->
+                <Button fx:id="financementButton"
+                        text="💰 Financement"
+                        onAction="#goToInvestissement"
                         styleClass="nav-button"
                         prefWidth="220"
-                        alignment="CENTER_LEFT"/>
+                        alignment="CENTER_LEFT"
+                        visible="false" managed="false"/>
             </VBox>
 
             <Separator styleClass="sidebar-separator"/>
@@ -61,6 +66,13 @@
             <VBox spacing="5">
                 <Button text="👤 Mon Profil"
                         onAction="#openProfile"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="⚙️ Définir mon rôle"
+                        fx:id="btnSetRoleType"
+                        onAction="#showRoleTypeDialog"
                         styleClass="nav-button"
                         prefWidth="220"
                         alignment="CENTER_LEFT"/>
