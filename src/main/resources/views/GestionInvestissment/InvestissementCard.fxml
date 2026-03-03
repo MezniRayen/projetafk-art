@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/17"
+      fx:controller="tn.hounayda.controllers.GestionInvestissment.InvestissementCardController"
+      spacing="8.0"
+      styleClass="card investissement-card"
+      prefWidth="280"
+      maxWidth="280"
+      prefHeight="200">
+
+    <padding>
+        <Insets top="12" right="14" bottom="12" left="14"/>
+    </padding>
+
+    <HBox spacing="8.0" alignment="CENTER_LEFT">
+        <Label fx:id="projetLabel" styleClass="card-title" text="Projet #..."/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statutLabel" styleClass="chip" text="Statut"/>
+    </HBox>
+
+    <HBox spacing="10.0">
+        <Label fx:id="montantLabel" styleClass="card-meta" text="Montant: 0 €"/>
+        <Label fx:id="moyenLabel" styleClass="card-meta-light" text="Paiement: ..."/>
+    </HBox>
+
+    <Label fx:id="dateLabel" styleClass="card-meta-light" text="Date"/>
+
+    <Label fx:id="palierLabel" styleClass="card-meta-light" text=""/>
+
+    <Label fx:id="messageLabel" wrapText="true" styleClass="card-description"
+           text="" maxHeight="60"/>
+
+</VBox>

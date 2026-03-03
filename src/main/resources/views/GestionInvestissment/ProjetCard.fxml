@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/17"
+      fx:controller="tn.hounayda.controllers.GestionInvestissment.ProjetCardController"
+      spacing="8.0"
+      styleClass="card projet-card"
+      prefWidth="300"
+      maxWidth="300"
+      prefHeight="280">
+
+        <padding>
+                <Insets top="12" right="14" bottom="12" left="14"/>
+        </padding>
+
+        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                <Label fx:id="titreLabel" styleClass="card-title" text="Titre du projet"/>
+                <Label fx:id="categorieLabel" styleClass="chip chip-category" text="Catégorie"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Label fx:id="statutLabel" styleClass="chip chip-status" text="Statut"/>
+        </HBox>
+
+        <Label fx:id="descriptionLabel" wrapText="true" styleClass="card-description"
+               text="Description..." maxHeight="60"/>
+
+        <ProgressBar fx:id="progressBar" prefWidth="280" progress="0.0"/>
+
+        <HBox spacing="10.0">
+                <Label fx:id="objectifLabel" styleClass="card-meta" text="Objectif: 0 €"/>
+                <Label fx:id="collecteLabel" styleClass="card-meta" text="Collecté: 0 €"/>
+        </HBox>
+
+        <HBox spacing="10.0">
+                <Label fx:id="datesLabel" styleClass="card-meta-light" text="Créé le ..."/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Label fx:id="ownerLabel" styleClass="card-owner" text=""/>
+        </HBox>
+
+        <!-- Bouton Favori -->
+        <Button fx:id="favoriButton"
+                text="☆ Ajouter aux favoris"
+                styleClass="favori-button"
+                maxWidth="Infinity"
+                prefHeight="30"/>
+</VBox>
