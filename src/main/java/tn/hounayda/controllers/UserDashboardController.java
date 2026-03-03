@@ -332,8 +332,16 @@ public class UserDashboardController {
 
     @FXML
     private void handleDynamicButton(ActionEvent event) {
-        // Cette méthode est vide car l'action est définie dynamiquement
-        // Mais elle doit exister pour éviter les erreurs FXML
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user_actions.fxml"));
+            Scene scene = new Scene(loader.load(), 600, 400);
+            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Connexion AFK'Art");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void redirectToLogin() {
