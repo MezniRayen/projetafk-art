@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.hounayda.controllers.UserActionsController"
+            fitToWidth="true"
+            style="-fx-background: transparent; -fx-background-color: transparent;">
+
+    <VBox spacing="20">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <!-- En-tête -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="🎨 Actions Artistiques" styleClass="content-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Filtres -->
+            <ComboBox fx:id="filterCombo" prefWidth="150" promptText="Filtre">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Toutes les actions"/>
+                        <String fx:value="Valides"/>
+                        <String fx:value="Expirées"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="200"/>
+        </HBox>
+
+        <!-- Grille des actions -->
+        <FlowPane fx:id="actionsGrid"
+                  hgap="20"
+                  vgap="20"
+                  alignment="CENTER">
+            <!-- Les cartes seront ajoutées dynamiquement -->
+        </FlowPane>
+
+        <!-- Message si aucune action -->
+        <Label fx:id="noActionsLabel"
+               text="Aucune action artistique disponible"
+               style="-fx-font-size: 16; -fx-text-fill: gray;"
+               visible="false" managed="false"/>
+    </VBox>
+</ScrollPane>

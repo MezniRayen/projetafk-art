@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.hounayda.controllers.LoginController"
+      spacing="20.0"
+      alignment="CENTER"
+      stylesheets="@/css/art-style.css">
+
+    <padding>
+        <Insets top="100" right="50" bottom="100" left="50"/>
+    </padding>
+
+    <Label text="Bienvenue sur AFK'Art" styleClass="header-title" alignment="CENTER"/>
+
+    <VBox spacing="16.0" styleClass="card" prefWidth="400">
+
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <Label text="Email :" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="emailField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <Label text="Mot de passe :" style="-fx-font-weight: bold;"/>
+            <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <Button text="Se connecter" onAction="#login" styleClass="primary-button" alignment="CENTER"/>
+        <Button text="Créer un compte"
+                onAction="#goToRegister"
+                styleClass="secondary-button"/>
+        <Button text="Mot de passe oublié ?"
+                onAction="#goToResetPassword"
+                styleClass="secondary-button"/>
+    </VBox>
+
+</VBox>

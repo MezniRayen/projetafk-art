@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.hounayda.controllers.AdminActionController"
+            stylesheets="@/css/art-style.css">
+
+    <!-- Barre latérale gauche (sidebar) -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="15" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="25" bottom="25" left="15" right="15"/>
+            </padding>
+
+            <Label text="AFK'Art Admin" styleClass="sidebar-title"/>
+
+            <VBox spacing="8" alignment="CENTER" styleClass="user-info-card">
+                <Label text="👤" style="-fx-font-size: 40px; -fx-text-fill: #4A3B2F;"/>
+                <Label fx:id="welcomeLabel" styleClass="user-name"/>
+                <Label text="Administrateur" styleClass="user-role"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Button text="🏠 Accueil Admin"
+                        onAction="#goToDashboard"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="👥 Gestion Utilisateurs"
+                        onAction="#goToUsers"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="📋 Gestion Actions"
+                        onAction="#goToActions"
+                        styleClass="nav-button nav-active"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <VBox spacing="5">
+                <Button text="👤 Mon Profil"
+                        onAction="#openProfile"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="🚪 Déconnexion"
+                        onAction="#logout"
+                        styleClass="nav-button logout"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Contenu central -->
+    <center>
+        <VBox spacing="15" styleClass="content-area" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <!-- En-tête avec bouton d'ajout -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="📋 Gestion des Actions Artistiques" styleClass="welcome-title" style="-fx-font-size: 20px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="➕ Nouvelle Action" onAction="#showAddForm" styleClass="primary-button"/>
+            </HBox>
+
+            <!-- Formulaire d'ajout/modification (caché par défaut) -->
+            <VBox fx:id="formContainer" spacing="15" styleClass="card" visible="false" managed="false">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Label fx:id="formTitle" text="Nouvelle Action" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4A3B2F;"/>
+
+                <GridPane hgap="10" vgap="10">
+                    <padding>
+                        <Insets bottom="10"/>
+                    </padding>
+
+                    <Label text="Type d'action:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="actionField" promptText="Ex: Exposition, Atelier..." GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="300"/>
+                    <Label fx:id="actionError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextArea fx:id="descriptionArea" promptText="Description détaillée..." prefRowCount="3" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="300"/>
+                    <Label fx:id="descriptionError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                    <Label text="Date d'expiration:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <DatePicker fx:id="expirationPicker" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="200"/>
+                    <Label fx:id="expirationError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                </GridPane>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="saveButton" text="💾 Enregistrer" onAction="#saveAction" styleClass="primary-button"/>
+                    <Button fx:id="updateButton" text="✏️ Modifier" onAction="#updateAction" styleClass="primary-button" visible="false" managed="false"/>
+                    <Button text="❌ Annuler" onAction="#hideForm" styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+
+            <!-- Barre de recherche et filtres -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Rechercher une action..." prefWidth="250"/>
+                <ComboBox fx:id="statusFilter" prefWidth="120" promptText="Filtrer par statut"/>
+                <Label text="Tri:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="sortFilter" prefWidth="150" promptText="Trier par"/>
+            </HBox>
+
+            <!-- Grille des actions -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background: transparent;">
+                <FlowPane fx:id="actionsGrid"
+                          hgap="12"
+                          vgap="12"
+                          alignment="TOP_LEFT"
+                          style="-fx-background-color: transparent; -fx-padding: 5;">
+                </FlowPane>
+            </ScrollPane>
+
+            <!-- Message si aucune action -->
+            <Label fx:id="noActionsLabel"
+                   text="Aucune action trouvée"
+                   style="-fx-font-size: 14; -fx-text-fill: gray; -fx-padding: 20;"
+                   visible="false" managed="false"/>
+        </VBox>
+    </center>
+
+</BorderPane>

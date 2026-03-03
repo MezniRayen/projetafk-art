@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.hounayda.controllers.RegisterController"
+      spacing="20"
+      alignment="CENTER"
+      stylesheets="@/css/art-style.css">
+
+    <padding>
+        <Insets top="80" right="50" bottom="80" left="50"/>
+    </padding>
+
+    <Label text="Créer un compte AFK'Art" styleClass="header-title"/>
+
+    <VBox spacing="15" styleClass="card" prefWidth="420">
+
+        <HBox spacing="10">
+            <Label text="Nom :" minWidth="100"/>
+            <TextField fx:id="nomField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Prénom :" minWidth="100"/>
+            <TextField fx:id="prenomField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Email :" minWidth="100"/>
+            <TextField fx:id="emailField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Mot de passe :" minWidth="100"/>
+            <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Confirmer :" minWidth="100"/>
+            <PasswordField fx:id="confirmPasswordField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <Button text="Créer le compte"
+                onAction="#register"
+                styleClass="primary-button"/>
+
+        <Button text="Retour connexion"
+                onAction="#goToLogin"
+                styleClass="secondary-button"/>
+
+    </VBox>
+
+</VBox>

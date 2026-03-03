@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.hounayda.controllers.ProfileController"
+      spacing="20.0"
+      alignment="CENTER"
+      stylesheets="@/css/art-style.css">
+
+    <padding>
+        <Insets top="20" right="50" bottom="40" left="50"/>
+    </padding>
+
+    <!-- Barre de navigation avec bouton retour -->
+    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: transparent; -fx-padding: 0 0 10 0;">
+        <Button text="← Retour au tableau de bord"
+                onAction="#goToDashboard"
+                styleClass="secondary-button"
+                prefWidth="200"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Mon Profil AFK'Art" styleClass="header-title" alignment="CENTER"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox spacing="20.0" styleClass="card" prefWidth="600">
+
+        <!-- Photo de profil actuelle + upload -->
+        <HBox spacing="20.0" alignment="CENTER">
+            <ImageView fx:id="profileImageView" fitWidth="120" fitHeight="120" preserveRatio="true"/>
+            <VBox spacing="10">
+                <Label text="Photo de profil actuelle" style="-fx-font-weight: bold;"/>
+                <Button text="Changer photo" onAction="#uploadPhoto" styleClass="primary-button"/>
+                <Label fx:id="photoStatusLabel" text="" style="-fx-text-fill: green;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Infos actuelles -->
+        <Label fx:id="fullNameLabel" styleClass="card-title"/>
+        <Label fx:id="emailLabel" styleClass="card-description"/>
+        <Label fx:id="roleLabel" style="-fx-font-weight: bold;"/>
+        <Label fx:id="statusLabel" style="-fx-font-weight: bold;"/>
+
+        <!-- Formulaire modification -->
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <Label text="Nouveau nom :" style="-fx-font-weight: bold;" prefWidth="120"/>
+            <TextField fx:id="newNameField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <Label text="Nouveau prénom :" style="-fx-font-weight: bold;" prefWidth="120"/>
+            <TextField fx:id="newPrenomField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <!-- Changement mot de passe -->
+        <Label text="Changer mot de passe" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <Label text="Ancien mot de passe :" style="-fx-font-weight: bold;" prefWidth="120"/>
+            <PasswordField fx:id="oldPasswordField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <Label text="Nouveau mot de passe :" style="-fx-font-weight: bold;" prefWidth="120"/>
+            <PasswordField fx:id="newPasswordField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <Label text="Confirmer :" style="-fx-font-weight: bold;" prefWidth="120"/>
+            <PasswordField fx:id="confirmPasswordField" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <Button text="Enregistrer modifications"
+                onAction="#saveProfile"
+                styleClass="primary-button"
+                alignment="CENTER"
+                prefWidth="250"/>
+
+    </VBox>
+
+    <Button text="Déconnexion"
+            onAction="#logout"
+            styleClass="secondary-button"
+            alignment="CENTER"
+            prefWidth="200"/>
+
+</VBox>

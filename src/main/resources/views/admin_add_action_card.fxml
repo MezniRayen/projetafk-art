@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.hounayda.controllers.AdminAddActionController"
+            stylesheets="@/css/art-style.css">
+
+    <!-- Barre latérale gauche (sidebar) identique aux autres interfaces -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="15" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="25" bottom="25" left="15" right="15"/>
+            </padding>
+
+            <!-- Logo / Titre -->
+            <Label text="AFK'Art Admin" styleClass="sidebar-title"/>
+
+            <!-- Infos administrateur -->
+            <VBox spacing="8" alignment="CENTER" styleClass="user-info-card">
+                <Label text="👤" style="-fx-font-size: 40px; -fx-text-fill: #4A3B2F;"/>
+                <Label fx:id="welcomeLabel" styleClass="user-name"/>
+                <Label text="Administrateur" styleClass="user-role"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <!-- Menu principal admin -->
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Button text="🏠 Accueil Admin"
+                        onAction="#goToDashboard"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="👥 Gestion Utilisateurs"
+                        onAction="#goToUsers"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="📋 Gestion Actions"
+                        onAction="#goToActions"
+                        styleClass="nav-button nav-active"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <!-- Actions utilisateur -->
+            <VBox spacing="5">
+                <Button text="👤 Mon Profil"
+                        onAction="#openProfile"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="🚪 Déconnexion"
+                        onAction="#logout"
+                        styleClass="nav-button logout"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Contenu central avec la carte d'ajout -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox spacing="25" alignment="TOP_CENTER" styleClass="content-area">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
+
+                <!-- En-tête -->
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="➕" style="-fx-font-size: 40px; -fx-text-fill: #E38792;"/>
+                    <VBox spacing="5">
+                        <Label text="Créer une nouvelle action" styleClass="welcome-title"/>
+                        <Label text="Remplissez les informations ci-dessous" styleClass="welcome-subtitle"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Carte de formulaire sophistiquée -->
+                <VBox styleClass="add-action-card" maxWidth="650" spacing="25">
+                    <padding>
+                        <Insets top="30" right="35" bottom="35" left="35"/>
+                    </padding>
+
+                    <!-- En-tête de la carte avec icône -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="🎨" style="-fx-font-size: 40px;"/>
+                        <VBox spacing="5">
+                            <Label text="Nouvelle action artistique" styleClass="card-title"/>
+                            <Label text="Les actions seront visibles par tous les utilisateurs" styleClass="card-subtitle"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Séparateur décoratif -->
+                    <Separator styleClass="card-separator"/>
+
+                    <!-- Formulaire -->
+                    <VBox spacing="20">
+                        <!-- Champ Type d'action avec icône -->
+                        <VBox spacing="8">
+                            <Label text="📌 Type d'action" styleClass="field-label"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="field-container">
+                                <TextField fx:id="actionField"
+                                           promptText="Ex: Exposition, Atelier, Concert, Spectacle..."
+                                           HBox.hgrow="ALWAYS"
+                                           styleClass="modern-field"/>
+                            </HBox>
+                            <Label fx:id="actionError"
+                                   text=""
+                                   styleClass="error-label"
+                                   managed="false" visible="false"/>
+                        </VBox>
+
+                        <!-- Champ Description avec icône -->
+                        <VBox spacing="8">
+                            <Label text="📝 Description détaillée" styleClass="field-label"/>
+                            <VBox styleClass="field-container">
+                                <TextArea fx:id="descriptionArea"
+                                          promptText="Décrivez l'action en détail (objectifs, programme, conditions...)"
+                                          prefRowCount="4"
+                                          wrapText="true"
+                                          styleClass="modern-textarea"/>
+                            </VBox>
+                            <Label fx:id="descriptionError"
+                                   text=""
+                                   styleClass="error-label"
+                                   managed="false" visible="false"/>
+                        </VBox>
+
+                        <!-- Champ Date avec icône -->
+                        <VBox spacing="8">
+                            <Label text="⏰ Date d'expiration" styleClass="field-label"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="field-container">
+                                <DatePicker fx:id="expirationPicker"
+                                            promptText="Sélectionner une date"
+                                            styleClass="modern-datepicker"
+                                            HBox.hgrow="ALWAYS"/>
+                            </HBox>
+                            <Label fx:id="expirationError"
+                                   text=""
+                                   styleClass="error-label"
+                                   managed="false" visible="false"/>
+                        </VBox>
+
+                        <!-- Aperçu des informations -->
+                        <VBox spacing="10" styleClass="preview-section">
+                            <Label text="Aperçu de l'action" styleClass="preview-title"/>
+                            <GridPane hgap="15" vgap="8" styleClass="preview-grid">
+                                <Label text="Type:" styleClass="preview-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <Label fx:id="previewAction" text="-" styleClass="preview-value" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                <Label text="Expire le:" styleClass="preview-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <Label fx:id="previewDate" text="-" styleClass="preview-value" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            </GridPane>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Boutons d'action -->
+                    <HBox spacing="15" alignment="CENTER">
+                        <Button text="✨ Créer l'action"
+                                onAction="#saveAction"
+                                styleClass="primary-button"
+                                prefWidth="180"/>
+                        <Button text="Annuler"
+                                onAction="#cancel"
+                                styleClass="secondary-button"
+                                prefWidth="120"/>
+                    </HBox>
+
+                    <!-- Note d'information -->
+                    <HBox alignment="CENTER" spacing="5" styleClass="info-note">
+                        <Label text="ℹ️" style="-fx-font-size: 14px;"/>
+                        <Label text="Tous les champs sont obligatoires"
+                               style="-fx-text-fill: #888; -fx-font-size: 11px;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

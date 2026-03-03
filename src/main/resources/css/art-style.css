@@ -1,0 +1,533 @@
+.root-pane {
+    -fx-background-color: #4E0A0A;  /* bordeaux profond dominant */
+    -fx-background-image: url('/images/maroon-paper-texture.jpg');  /* ajoute une texture papier si tu as */
+    -fx-background-size: cover;
+    -fx-background-position: center;
+}
+
+.header-title {
+    -fx-text-fill: #F2EEEE;          /* beige clair sur fond sombre */
+    -fx-font-family: "Playfair Display", "Georgia", serif;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #00000088, 8, 0.4, 2, 2);
+}
+
+.card {
+    -fx-background-color: #FDF8F0DD;   /* beige papier semi-transparent */
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #8B451366;       /* bordeaux transparent */
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, #00000044, 12, 0, 0, 6);
+    -fx-padding: 20;
+}
+
+.card-title {
+    -fx-text-fill: #5C2D2D;
+    -fx-font-family: "Cinzel", serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.card-description, .label {
+    -fx-text-fill: #4A3C31;
+    -fx-font-family: "Lora", "Georgia", serif;
+    -fx-font-size: 14px;
+}
+
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom, #E38792, #D16F7F);  /* dusty rose gradient */
+    -fx-text-fill: #F2F0EB;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-font-weight: bold;
+    -fx-padding: 10 28 10 28;
+    -fx-effect: dropshadow(gaussian, #00000066, 6, 0, 0, 3);
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #D16F7F, #C25C6C);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #9DAD71;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-text-fill: #9DAD71;
+    -fx-font-weight: bold;
+}
+
+.table-view {
+    -fx-background-color: #FDF8F0EE;
+    -fx-border-color: #8B451380;
+    -fx-border-width: 1;
+}
+
+.table-view .column-header {
+    -fx-background-color: #EDE4D9;
+    -fx-text-fill: #5C2D2D;
+    -fx-font-weight: bold;
+    -fx-font-family: "Merriweather", serif;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #E3879244;  /* rose dusty transparent */
+}
+
+.chip {
+    -fx-background-radius: 999;
+    -fx-padding: 4 12 4 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.chip-status {
+    -fx-background-color: #9DAD7166;
+    -fx-text-fill: #2F4F4F;
+}
+.root-pane {
+    -fx-background-color: #ff0000 !important;  /* ROUGE flashy */
+}/* Sidebar avec nouvelle couleur */
+.sidebar {
+    -fx-background-color: #FDF8F0DD;  /* beige papier semi-transparent */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.sidebar-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;  /* brun foncé pour contraster */
+}
+
+.user-info-card {
+    -fx-background-color: #FFFFFF88;  /* blanc semi-transparent */
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-alignment: CENTER;
+    -fx-spacing: 8;
+    -fx-border-color: #E38792;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.user-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;
+}
+
+.user-role {
+    -fx-font-size: 12px;
+    -fx-text-fill: #D16F7F;
+}
+
+.sidebar-separator {
+    -fx-background-color: #E3879244;
+    -fx-opacity: 0.5;
+    -fx-padding: 0 10 0 10;
+}
+
+/* Boutons de navigation */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4A3B2F;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 15;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #E3879244;  /* dusty rose avec transparence */
+}
+
+.nav-button.logout {
+    -fx-text-fill: #D16F7F;
+    -fx-font-weight: bold;
+}
+
+.nav-button.logout:hover {
+    -fx-background-color: #D16F7F;
+    -fx-text-fill: white;
+}
+
+/* Primary button avec le gradient demandé */
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom, #E38792, #D16F7F);  /* dusty rose gradient */
+    -fx-text-fill: #F2F0EB;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-font-weight: bold;
+    -fx-padding: 10 28 10 28;
+    -fx-effect: dropshadow(gaussian, #00000066, 6, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #D16F7F, #C05F6F);
+}
+/* Content area - fond clair */
+.content-area {
+    -fx-background-color: #f8f5f0;  /* Beige très clair au lieu de gris */
+    -fx-padding: 15;
+}
+
+/* Zone des cartes - sans fond */
+.flow-pane {
+    -fx-background-color: transparent;
+}
+
+/* ScrollPane transparent */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #E3879244;
+    -fx-background-radius: 6;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #E38792;
+}
+
+/* Cartes plus compactes */
+.user-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);
+    -fx-padding: 12;
+    -fx-pref-width: 260;
+    -fx-pref-height: 250;
+}
+
+.user-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(227,135,146,0.2), 6, 0, 0, 2);
+}
+
+/* Bouton de statut plus compact */
+.user-card .button {
+    -fx-pref-width: 180;
+    -fx-padding: 6;
+    -fx-font-size: 12px;
+    -fx-background-radius: 5;
+}
+
+/* En-tête plus compact */
+.user-card .header-title {
+    -fx-font-size: 14px;
+}
+
+/* Labels plus petits */
+.user-card .label {
+    -fx-font-size: 12px;
+}
+
+.user-card .user-name {
+    -fx-font-size: 14px;
+}
+
+/* Filtres plus compacts */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #E3879244;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 12px;
+    -fx-pref-height: 30;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #E3879244;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 12px;
+    -fx-pref-height: 30;
+}
+
+/* En-tête de section plus compact */
+.welcome-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;
+}
+
+/* Badges de statut plus petits */
+.status-badge {
+    -fx-padding: 2 6;
+    -fx-background-radius: 10;
+    -fx-font-size: 10px;
+}
+
+.welcome-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;
+}
+
+.welcome-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #D16F7F;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;
+}
+
+.recent-section {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);
+    -fx-border-color: #E3879244;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1;
+}
+
+.recent-list {
+    -fx-background-color: transparent;
+    -fx-border-color: #E3879244;
+    -fx-border-radius: 8px;
+}
+
+.recent-list .list-cell {
+    -fx-padding: 10px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #4A3B2F;
+}
+
+.recent-list .list-cell:hover {
+    -fx-background-color: #E3879211;
+}
+
+/* Secondary button (optionnel) */
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #D16F7F;
+    -fx-font-weight: bold;
+    -fx-border-color: #D16F7F;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px 20px;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #E3879211;
+    -fx-cursor: hand;
+}
+/* Cartes utilisateurs */
+.user-card {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+.user-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(227,135,146,0.3), 10, 0, 0, 0);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-transition: all 0.3s ease;
+}
+
+/* Badges de statut */
+.status-badge {
+    -fx-padding: 2 8;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.status-badge.actif {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+}
+
+.status-badge.suspendu {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+}
+
+.status-badge.banni {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+}
+
+/* Boutons d'action sur les cartes */
+.user-card .button {
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.user-card .button:hover {
+    -fx-opacity: 0.8;
+}
+
+.user-card .button:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+/* Carte d'ajout d'action */
+.add-action-card {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 10);
+    -fx-border-color: linear-gradient(to bottom, #E38792, #D16F7F);
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+}
+
+.card-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;
+}
+
+.card-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #888;
+}
+
+.card-separator {
+    -fx-background-color: linear-gradient(to right, transparent, #E38792, transparent);
+    -fx-padding: 0 0 1 0;
+}
+
+.field-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;
+}
+
+.field-container {
+    -fx-background-color: #f8f5f0;
+    -fx-background-radius: 10;
+    -fx-padding: 5;
+    -fx-border-color: #E3879244;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.field-container:focused-within {
+    -fx-border-color: #E38792;
+    -fx-border-width: 2;
+}
+
+.modern-field {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.modern-textarea {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.modern-datepicker {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+}
+
+.modern-datepicker > .text-field {
+    -fx-background-color: transparent;
+    -fx-padding: 8 12;
+}
+
+.error-label {
+    -fx-text-fill: #c0392b;
+    -fx-font-size: 11px;
+    -fx-padding: 0 0 0 10;
+}
+
+/* Section aperçu */
+.preview-section {
+    -fx-background-color: #f8f5f0;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+    -fx-border-color: #E3879244;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.preview-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A3B2F;
+}
+
+.preview-grid {
+    -fx-padding: 5 0 0 0;
+}
+
+.preview-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #666;
+}
+
+.preview-value {
+    -fx-font-size: 12px;
+    -fx-text-fill: #E38792;
+    -fx-font-weight: bold;
+}
+
+.info-note {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 15;
+    -fx-padding: 8;
+}
+
+/* Boutons améliorés */
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom, #E38792, #D16F7F);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #D16F7F66, 8, 0, 0, 3);
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #D16F7F, #C05F6F);
+    -fx-effect: dropshadow(gaussian, #D16F7FAA, 12, 0, 0, 4);
+}
+
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #D16F7F;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-color: #D16F7F;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #D16F7F11;
+}

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.hounayda.controllers.AdminUserCardsController"
+            stylesheets="@/css/art-style.css">
+
+    <!-- Barre latérale gauche (sidebar) - inchangée -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="15" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="25" bottom="25" left="15" right="15"/>
+            </padding>
+
+            <Label text="AFK'Art Admin" styleClass="sidebar-title"/>
+
+            <VBox spacing="8" alignment="CENTER" styleClass="user-info-card">
+                <Label text="👤" style="-fx-font-size: 40px; -fx-text-fill: #4A3B2F;"/>
+                <Label fx:id="welcomeLabel" styleClass="user-name"/>
+                <Label text="Administrateur" styleClass="user-role"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Button text="🏠 Accueil Admin"
+                        onAction="#goToDashboard"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="👥 Gestion Utilisateurs"
+                        onAction="#goToUsers"
+                        styleClass="nav-button nav-active"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="📋 Gestion Actions"
+                        onAction="#goToActions"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="📊 Statistiques"
+                        onAction="#goToStats"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <VBox spacing="5">
+                <Button text="👤 Mon Profil"
+                        onAction="#openProfile"
+                        styleClass="nav-button"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+
+                <Button text="🚪 Déconnexion"
+                        onAction="#logout"
+                        styleClass="nav-button logout"
+                        prefWidth="220"
+                        alignment="CENTER_LEFT"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Contenu central -->
+    <!-- Contenu central -->
+    <center>
+        <VBox spacing="15" styleClass="content-area" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <!-- En-tête plus compact -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="👥 Gestion des Utilisateurs" styleClass="welcome-title" style="-fx-font-size: 20px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Barre de recherche plus petite -->
+                <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="200"/>
+
+                <!-- Filtres plus petits -->
+                <ComboBox fx:id="roleFilter" prefWidth="100" promptText="Rôle"/>
+                <ComboBox fx:id="statusFilter" prefWidth="100" promptText="Statut"/>
+            </HBox>
+
+            <!-- Zone de défilement des cartes - occupe tout l'espace restant -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background: transparent; -fx-background-color: transparent;">
+                <FlowPane fx:id="usersGrid"
+                          hgap="12"
+                          vgap="12"
+                          alignment="TOP_CENTER"
+                          style="-fx-background-color: transparent; -fx-padding: 5;">
+                    <!-- Les cartes utilisateurs seront ajoutées dynamiquement -->
+                </FlowPane>
+            </ScrollPane>
+
+            <!-- Message si aucun utilisateur -->
+            <Label fx:id="noUsersLabel"
+                   text="Aucun utilisateur trouvé"
+                   style="-fx-font-size: 14; -fx-text-fill: gray; -fx-padding: 20;"
+                   visible="false" managed="false"/>
+        </VBox>
+    </center>
+
+</BorderPane>
