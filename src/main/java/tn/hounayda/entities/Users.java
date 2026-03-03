@@ -322,6 +322,5 @@ public class Users {
                 '}';
     }
 
-    public Object isUser() {
-    }
+
 }
