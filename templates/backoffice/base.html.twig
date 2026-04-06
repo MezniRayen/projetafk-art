@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('backoffice/assets/images/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('backoffice/assets/images/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('backoffice/assets/images/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ asset('backoffice/assets/site.webmanifest') }}">
+  {% block meta %}{% endblock %}
+  <title>{% block title %}Backoffice{% endblock %}</title>
+  <link rel="stylesheet" crossorigin href="{{ asset('backoffice/assets/css/index.css') }}">
+  {% block stylesheets %}{% endblock %}
+</head>
+<body>
+  <div id="overlay" class="overlay"></div>
+
+  <nav id="topbar" class="navbar bg-white border-bottom fixed-top topbar px-3">
+    <button id="toggleBtn" class="d-none d-lg-inline-flex btn btn-light btn-icon btn-sm ">
+      <i class="ti ti-layout-sidebar-left-expand"></i>
+    </button>
+    <button id="mobileBtn" class="btn btn-light btn-icon btn-sm d-lg-none me-2">
+      <i class="ti ti-layout-sidebar-left-expand"></i>
+    </button>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <span class="small text-secondary">Admin Panel</span>
+      <a class="btn btn-sm btn-outline-secondary" href="{{ path('app_frontoffice') }}">Frontoffice</a>
+      <a class="btn btn-sm btn-primary" href="{{ path('app_logout') }}">Logout</a>
+    </div>
+  </nav>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="logo-area">
+      <a href="{{ path('app_backoffice') }}" class="d-inline-flex">
+        <img src="{{ asset('logo.jpg') }}" alt="Afk'art logo" style="height:36px; width:auto; border-radius:4px;">
+      </a>
+    </div>
+
+    <ul class="nav flex-column">
+      <li class="px-4 py-2"><small class="nav-text">Main</small></li>
+      <li><a class="nav-link" href="{{ path('app_backoffice') }}"><i class="ti ti-home"></i><span class="nav-text">Dashboard</span></a></li>
+      <li><a class="nav-link" href="{{ path('app_backoffice_user_index') }}"><i class="ti ti-users"></i><span class="nav-text">Users</span></a></li>
+      <li><a class="nav-link" href="{{ path('app_backoffice_project_index') }}"><i class="ti ti-stack"></i><span class="nav-text">Projects</span></a></li>
+      <li><a class="nav-link" href="{{ path('app_backoffice_investment_index') }}"><i class="ti ti-cash-banknote"></i><span class="nav-text">Investments</span></a></li>
+    </ul>
+  </aside>
+
+  <main id="content" class="content py-10">
+    <div class="container-fluid">
+      {% block body %}{% endblock %}
+    </div>
+  </main>
+
+  <script type="module" crossorigin src="{{ asset('backoffice/assets/js/index.js') }}"></script>
+  {% block javascripts %}{% endblock %}
+</body>
+</html>

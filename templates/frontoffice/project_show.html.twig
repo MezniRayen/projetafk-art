@@ -1,0 +1,48 @@
+{% extends 'frontoffice/base.html.twig' %}
+
+{% block title %}Project Details{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bulma/bulma.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+  {% include 'frontoffice/_navbar.html.twig' %}
+
+  <section class="section">
+    <div class="container" style="max-width: 900px;">
+      <h1 class="title is-3">{{ project.titre }}</h1>
+      <p class="subtitle is-6">By {{ project.artiste ? project.artiste.displayName : 'Unknown artist' }}</p>
+
+      <div class="box">
+        {% if project.image %}
+          <figure style="margin-bottom:16px;">
+            <img src="{{ asset('uploads/projects/' ~ project.image) }}" alt="{{ project.titre }}" style="width:100%; max-height:420px; object-fit:cover; border-radius:10px;">
+          </figure>
+        {% endif %}
+        <p class="mb-4">{{ project.description }}</p>
+        <p><strong>Goal:</strong> {{ project.objectifFinancier }}</p>
+        <p><strong>Collected:</strong> {{ project.montantCollecte }}</p>
+        <p><strong>Status:</strong> {{ project.statut }}</p>
+        <p><strong>Category:</strong> {{ project.categorie }}</p>
+        <p><strong>Deadline:</strong> {{ project.dateLimite ? project.dateLimite|date('Y-m-d') : '-' }}</p>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="button is-light" href="{{ path('app_front_projects') }}">Back to projects</a>
+        {% if is_granted('ROLE_ARTIST') and app.user and project.artiste and project.artiste.id == app.user.id %}
+          <a class="button is-warning" href="{{ path('app_front_project_edit', {id: project.id}) }}">Edit project</a>
+          <form method="post" action="{{ path('app_front_project_delete', {id: project.id}) }}" onsubmit="return confirm('Delete this project?');" style="display:inline-block;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_my_project_' ~ project.id) }}">
+            <button class="button is-danger" type="submit">Delete project</button>
+          </form>
+        {% endif %}
+        {% if is_granted('ROLE_INVESTOR') %}
+          <a class="button is-primary" href="{{ path('app_front_project_invest', {id: project.id}) }}">Invest in this project</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

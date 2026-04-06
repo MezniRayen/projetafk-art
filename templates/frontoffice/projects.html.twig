@@ -1,0 +1,80 @@
+{% extends 'frontoffice/base.html.twig' %}
+
+{% block title %}Projects{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bulma/bulma.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+  {% include 'frontoffice/_navbar.html.twig' %}
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title is-3">Projects</h1>
+
+      <form method="get" class="box" style="margin-bottom:1rem;">
+        <div class="columns is-multiline is-variable is-2">
+          <div class="column is-5-desktop is-12-tablet">
+            <label class="label">Search</label>
+            <input class="input" type="text" name="search" value="{{ search|default('') }}" placeholder="Title, category, status, artist...">
+          </div>
+          <div class="column is-3-desktop is-6-tablet">
+            <label class="label">Sort by</label>
+            <div class="select is-fullwidth">
+              <select name="sort">
+                <option value="id" {% if (sort|default('id')) == 'id' %}selected{% endif %}>Newest</option>
+                <option value="titre" {% if (sort|default('id')) == 'titre' %}selected{% endif %}>Title</option>
+                <option value="categorie" {% if (sort|default('id')) == 'categorie' %}selected{% endif %}>Category</option>
+                <option value="statut" {% if (sort|default('id')) == 'statut' %}selected{% endif %}>Status</option>
+                <option value="objectifFinancier" {% if (sort|default('id')) == 'objectifFinancier' %}selected{% endif %}>Goal</option>
+                <option value="montantCollecte" {% if (sort|default('id')) == 'montantCollecte' %}selected{% endif %}>Collected</option>
+              </select>
+            </div>
+          </div>
+          <div class="column is-2-desktop is-6-tablet">
+            <label class="label">Direction</label>
+            <div class="select is-fullwidth">
+              <select name="dir">
+                <option value="DESC" {% if (dir|default('DESC')) == 'DESC' %}selected{% endif %}>DESC</option>
+                <option value="ASC" {% if (dir|default('DESC')) == 'ASC' %}selected{% endif %}>ASC</option>
+              </select>
+            </div>
+          </div>
+          <div class="column is-2-desktop is-12-tablet" style="display:flex; align-items:flex-end; gap:8px;">
+            <button class="button is-link" type="submit">Apply</button>
+            <a class="button is-light" href="{{ path('app_front_projects') }}">Reset</a>
+          </div>
+        </div>
+      </form>
+
+      <div style="margin-bottom:1rem;">
+        <a class="button is-dark is-small" href="{{ path('app_front_projects_export_pdf', {search: search|default(''), sort: sort|default('id'), dir: dir|default('DESC')}) }}">Export PDF</a>
+      </div>
+
+      <div class="columns is-multiline">
+        {% for project in projects %}
+          <div class="column is-4-desktop is-6-tablet">
+            <div class="box">
+              {% if project.image %}
+                <figure style="margin-bottom:12px;">
+                  <img src="{{ asset('uploads/projects/' ~ project.image) }}" alt="{{ project.titre }}" style="width:100%; height:190px; object-fit:cover; border-radius:8px;">
+                </figure>
+              {% endif %}
+              <h2 class="title is-5">{{ project.titre }}</h2>
+              <p class="mb-2">{{ project.description|slice(0, 150) }}{% if project.description|length > 150 %}...{% endif %}</p>
+              <p><strong>Goal:</strong> {{ project.objectifFinancier }}</p>
+              <p><strong>Collected:</strong> {{ project.montantCollecte }}</p>
+              <p><strong>Category:</strong> {{ project.categorie }}</p>
+              <a class="button is-small is-link mt-3" href="{{ path('app_front_project_show', {id: project.id}) }}">View details</a>
+            </div>
+          </div>
+        {% else %}
+          <div class="column is-12"><p>No projects available.</p></div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

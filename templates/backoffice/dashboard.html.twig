@@ -1,0 +1,20 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}Backoffice Dashboard{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" crossorigin href="{{ asset('backoffice/assets/css/index.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container" style="padding: 24px 0;">
+  <h1>Admin dashboard</h1>
+  <p>Users: {{ usersCount }} | Projects: {{ projectsCount }} | Investments: {{ investmentsCount }}</p>
+  <p>
+    <a class="btn btn-primary" href="{{ path('app_backoffice_user_index') }}">Manage users</a>
+    <a class="btn btn-primary" href="{{ path('app_backoffice_project_index') }}">Manage projects</a>
+    <a class="btn btn-primary" href="{{ path('app_backoffice_investment_index') }}">Manage investments</a>
+    <a class="btn btn-outline-secondary" href="{{ path('app_logout') }}">Logout</a>
+  </p>
+</div>
+{% endblock %}
