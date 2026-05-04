@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+    body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+    h1 { margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    th { background: #f3f3f3; }
+  </style>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Goal</th>
+        <th>Collected</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>{{ item.titre }}</td>
+          <td>{{ item.categorie }}</td>
+          <td>{{ item.statut }}</td>
+          <td>{{ item.objectifFinancier }}</td>
+          <td>{{ item.montantCollecte }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="6">No data.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

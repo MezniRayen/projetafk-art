@@ -1,0 +1,188 @@
+{% extends 'frontoffice/base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bulma/bulma.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/css/style.css') }}">
+  <style>
+    .form-shell {
+      background: #fff;
+      border: 1px solid #e7ecef;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 26px rgba(22, 34, 45, 0.08);
+    }
+
+    .form-shell > div {
+      margin-bottom: 12px;
+    }
+
+    .form-shell label {
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-shell input,
+    .form-shell textarea,
+    .form-shell select {
+      width: 100%;
+      border: 1px solid #c9d7df;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .form-shell input:focus,
+    .form-shell textarea:focus,
+    .form-shell select:focus {
+      outline: none;
+      border-color: #1b7a7a;
+      box-shadow: 0 0 0 3px rgba(27, 122, 122, 0.14);
+    }
+
+    .form-errors,
+    .form-shell ul {
+      color: #c62828;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 6px;
+      padding-left: 18px;
+    }
+
+    .form-errors {
+      border: 1px solid rgba(198, 40, 40, 0.24);
+      background: rgba(198, 40, 40, 0.08);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+{% include 'frontoffice/_navbar.html.twig' %}
+<section class="section">
+  <div class="container" style="max-width: 780px;">
+    <h1 class="mb-4 title is-4">{{ title }}</h1>
+
+    {% if suggestedThemes|default([]) is not empty %}
+      <div class="box" style="background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%); border-left: 5px solid #1b7a7a; margin-bottom: 20px;">
+        <h3 class="title is-5" style="margin-top:0; color:#1b7a7a;">
+          <i class="fas fa-lightbulb" style="margin-right:8px;"></i>AI-Recommended Themes for Your Project
+        </h3>
+        <p style="font-size:13px; color:#555; margin-bottom:12px;">Based on current national and international events, here are trending themes that could inspire your artistic project:</p>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+          {% for theme in suggestedThemes %}
+            <div style="background:#fff; border:1px solid #ddd; border-radius:8px; padding:12px; cursor:pointer; transition:all 0.3s; border-left:4px solid #1b7a7a; hover_bg:#f9f9f9;"
+                 data-theme="{{ theme }}"
+                 onclick="insertTheme(this)">
+              <p style="margin:0; font-size:13px; color:#333; font-weight:600;">{{ theme }}</p>
+              <small style="color:#999; font-size:11px;">Click to use as title</small>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {{ form_start(form, {'attr': {'id': 'project-form', 'novalidate': 'novalidate', 'class': 'form-shell'}}) }}
+      {% if form.vars.errors|length > 0 %}
+        <div class="form-errors">{{ form_errors(form) }}</div>
+      {% endif %}
+      {{ form_widget(form) }}
+      <div style="display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap;">
+        <button class="button is-info is-light" type="button" id="ai-improve-description">
+          <i class="fas fa-magic"></i>&nbsp;Improve Description with AI
+        </button>
+        <span id="ai-description-status" style="font-size:13px; color:#4a4a4a;"></span>
+      </div>
+      <div style="margin-top: 16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="button is-primary">Save Project</button>
+        <a class="button is-light" href="{{ path('app_front_my_projects') }}">Back</a>
+      </div>
+    {{ form_end(form) }}
+  </div>
+</section>
+<script>
+function insertTheme(element) {
+  const theme = element.getAttribute('data-theme');
+  const titleField = document.getElementById('projet_artistique_titre');
+  if (titleField && !titleField.value.trim()) {
+    titleField.value = theme;
+    titleField.focus();
+    element.style.background = '#e8f4f4';
+  } else if (titleField) {
+    alert('Please clear the title field first.');
+  }
+}
+
+document.getElementById('project-form')?.addEventListener('submit', function (e) {
+  const blocked = /<[^>]*>/;
+  const fields = this.querySelectorAll('input[type="text"], textarea');
+  for (const field of fields) {
+    if (blocked.test(field.value) || field.value.trim() === '') {
+      e.preventDefault();
+      alert('Empty values and HTML tags are not allowed.');
+      field.focus();
+      return;
+    }
+  }
+});
+
+document.getElementById('ai-improve-description')?.addEventListener('click', async function () {
+  const button = this;
+  const status = document.getElementById('ai-description-status');
+  const descriptionField = document.getElementById('projet_artistique_description');
+  const titleField = document.getElementById('projet_artistique_titre');
+  const categoryField = document.getElementById('projet_artistique_categorie');
+
+  if (!descriptionField || !descriptionField.value.trim()) {
+    alert('Please write a draft description first.');
+    descriptionField?.focus();
+    return;
+  }
+
+  button.disabled = true;
+  if (status) {
+    status.textContent = 'Generating improved description...';
+  }
+
+  try {
+    const response = await fetch('{{ path('app_front_project_ai_description') }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        _token: '{{ csrf_token('ai_project_description') }}',
+        draft: descriptionField.value,
+        title: titleField ? titleField.value : '',
+        category: categoryField ? categoryField.value : ''
+      })
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.description) {
+      throw new Error(result.error || 'Failed to generate text.');
+    }
+
+    descriptionField.value = result.description;
+    if (status) {
+      status.textContent = 'Description improved successfully.';
+    }
+  } catch (error) {
+    if (status) {
+      status.textContent = 'AI generation failed. Please try again.';
+    }
+    alert(error.message || 'AI generation failed.');
+  } finally {
+    button.disabled = false;
+  }
+});
+</script>
+
+});
+</script>
+{% endblock %}

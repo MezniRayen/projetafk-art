@@ -1,0 +1,73 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}Projects{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" crossorigin href="{{ asset('backoffice/assets/css/index.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container" style="padding: 24px 0;">
+  <h1>Artistic projects</h1>
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+      <input class="form-control" type="text" name="search" value="{{ search|default('') }}" placeholder="Search title, category, status, artist">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" name="sort">
+        <option value="id" {{ sort == 'id' ? 'selected' : '' }}>Sort by ID</option>
+        <option value="titre" {{ sort == 'titre' ? 'selected' : '' }}>Sort by Title</option>
+        <option value="categorie" {{ sort == 'categorie' ? 'selected' : '' }}>Sort by Category</option>
+        <option value="statut" {{ sort == 'statut' ? 'selected' : '' }}>Sort by Status</option>
+        <option value="objectifFinancier" {{ sort == 'objectifFinancier' ? 'selected' : '' }}>Sort by Goal</option>
+        <option value="montantCollecte" {{ sort == 'montantCollecte' ? 'selected' : '' }}>Sort by Collected</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" name="dir">
+        <option value="DESC" {{ dir == 'DESC' ? 'selected' : '' }}>DESC</option>
+        <option value="ASC" {{ dir == 'ASC' ? 'selected' : '' }}>ASC</option>
+      </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Apply</button>
+      <a class="btn btn-outline-secondary" href="{{ path('app_backoffice_project_export_pdf', {search: search|default(''), sort: sort|default('id'), dir: dir|default('DESC')}) }}">Export PDF</a>
+    </div>
+  </form>
+  <p>
+    <a class="btn btn-primary" href="{{ path('app_backoffice_project_new') }}">Create project</a>
+    <a class="btn btn-light" href="{{ path('app_backoffice') }}">Dashboard</a>
+  </p>
+  <table class="table table-striped">
+    <thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Artist</th><th>Goal</th><th>Collected</th><th></th></tr></thead>
+    <tbody>
+      {% for project in projects %}
+        <tr>
+          <td>{{ project.id }}</td>
+          <td>
+            {% if project.image %}
+              <img src="{{ asset('uploads/projects/' ~ project.image) }}" alt="{{ project.titre }}" style="width:56px; height:40px; object-fit:cover; border-radius:6px;">
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td>{{ project.titre }}</td>
+          <td>{{ project.artiste ? project.artiste.displayName : 'N/A' }}</td>
+          <td>{{ project.objectifFinancier }}</td>
+          <td>{{ project.montantCollecte }}</td>
+          <td>
+            <a class="btn btn-sm btn-success" href="{{ path('app_backoffice_investment_new', {id: project.id}) }}">Add investment</a>
+            <a class="btn btn-sm btn-warning" href="{{ path('app_backoffice_project_edit', {id: project.id}) }}">Edit</a>
+            <form method="post" action="{{ path('app_backoffice_project_delete', {id: project.id}) }}" style="display:inline-block" onsubmit="return confirm('Delete project?');">
+              <input type="hidden" name="_token" value="{{ csrf_token('delete_project_' ~ project.id) }}">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7">No projects found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

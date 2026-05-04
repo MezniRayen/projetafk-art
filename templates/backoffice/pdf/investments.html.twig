@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+    h1 { font-size: 18px; margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px; text-align: left; }
+    th { background: #efefef; }
+  </style>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Investor</th>
+        <th>Project</th>
+        <th>Amount</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in items %}
+        <tr>
+          <td>{{ i.id }}</td>
+          <td>{{ i.investisseur ? i.investisseur.displayName : 'N/A' }}</td>
+          <td>{{ i.projet ? i.projet.titre : 'N/A' }}</td>
+          <td>{{ i.montant }}</td>
+          <td>{{ i.moyenPaiement }}</td>
+          <td>{{ i.statut }}</td>
+          <td>{{ i.dateInvestissement|date('Y-m-d H:i') }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7">No data</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

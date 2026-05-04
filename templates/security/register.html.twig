@@ -1,0 +1,195 @@
+{% extends 'frontoffice/base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block stylesheets %}
+  <style>
+    :root {
+      --auth-bg-1: #e8f4f3;
+      --auth-bg-2: #f8ecdf;
+      --auth-accent: #0f7f6d;
+      --auth-accent-dark: #0b5f52;
+      --auth-card: #ffffff;
+      --auth-text: #1c2730;
+      --auth-muted: #617584;
+      --auth-success: #1d8f4f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+      color: var(--auth-text);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(15, 127, 109, 0.16), transparent 36%),
+        radial-gradient(circle at 88% 20%, rgba(240, 124, 55, 0.14), transparent 34%),
+        linear-gradient(160deg, var(--auth-bg-1), var(--auth-bg-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .auth-shell {
+      width: 100%;
+      max-width: 640px;
+      background: var(--auth-card);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(28, 39, 48, 0.16);
+      padding: 30px;
+    }
+
+    .auth-title {
+      margin: 0 0 6px;
+      font-size: 30px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .auth-subtitle {
+      margin: 0 0 22px;
+      color: var(--auth-muted);
+      font-size: 14px;
+    }
+
+    .auth-alert-success {
+      background: rgba(29, 143, 79, 0.1);
+      color: var(--auth-success);
+      border: 1px solid rgba(29, 143, 79, 0.24);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    form[name="registration_form"] > div {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #c6d7df;
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-size: 15px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--auth-accent);
+      box-shadow: 0 0 0 3px rgba(15, 127, 109, 0.14);
+    }
+
+    .auth-form-errors,
+    form[name="registration_form"] ul {
+      padding-left: 18px;
+      margin: 8px 0;
+      color: #c62828;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .auth-form-errors {
+      border: 1px solid rgba(198, 40, 40, 0.25);
+      background: rgba(198, 40, 40, 0.08);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+
+    .auth-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--auth-accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--auth-accent-dark);
+    }
+
+    .btn-secondary {
+      background: #e9f1f4;
+      color: var(--auth-text);
+    }
+
+    .btn-secondary:hover {
+      background: #dbe8ed;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="auth-shell">
+  <h1 class="auth-title">Create Account</h1>
+  <p class="auth-subtitle">Create your account to sign in and start using the platform.</p>
+
+  {% for message in app.flashes('success') %}
+    <div class="auth-alert-success">{{ message }}</div>
+  {% endfor %}
+
+  {{ form_start(registrationForm, {'attr': {'id': 'register-form', 'novalidate': 'novalidate'}}) }}
+    {% if registrationForm.vars.errors|length > 0 %}
+      <div class="auth-form-errors">{{ form_errors(registrationForm) }}</div>
+    {% endif %}
+    {{ form_row(registrationForm.nom) }}
+    {{ form_row(registrationForm.prenom) }}
+    {{ form_row(registrationForm.email) }}
+    {{ form_row(registrationForm.userType) }}
+    {{ form_row(registrationForm.plainPassword) }}
+    <div class="auth-actions">
+      <button class="btn btn-primary">Register</button>
+      <a class="btn btn-secondary" href="{{ path('app_login') }}">Back to login</a>
+    </div>
+  {{ form_end(registrationForm) }}
+</div>
+
+<script>
+document.getElementById('register-form')?.addEventListener('submit', function (e) {
+  const blocked = /<[^>]*>/;
+  const fields = this.querySelectorAll('input[type="text"], input[type="password"], textarea');
+  for (const field of fields) {
+    if (blocked.test(field.value)) {
+      e.preventDefault();
+      alert('HTML tags are not allowed.');
+      field.focus();
+      return;
+    }
+  }
+});
+</script>
+{% endblock %}

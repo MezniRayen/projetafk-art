@@ -1,0 +1,61 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}Investments{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" crossorigin href="{{ asset('backoffice/assets/css/index.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container" style="padding: 24px 0;">
+  <h1>Investments</h1>
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+      <input class="form-control" type="text" name="search" value="{{ search|default('') }}" placeholder="Search investor, project, status, payment">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" name="sort">
+        <option value="id" {{ sort == 'id' ? 'selected' : '' }}>Sort by ID</option>
+        <option value="montant" {{ sort == 'montant' ? 'selected' : '' }}>Sort by Amount</option>
+        <option value="moyenPaiement" {{ sort == 'moyenPaiement' ? 'selected' : '' }}>Sort by Payment Method</option>
+        <option value="statut" {{ sort == 'statut' ? 'selected' : '' }}>Sort by Status</option>
+        <option value="dateInvestissement" {{ sort == 'dateInvestissement' ? 'selected' : '' }}>Sort by Date</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" name="dir">
+        <option value="DESC" {{ dir == 'DESC' ? 'selected' : '' }}>DESC</option>
+        <option value="ASC" {{ dir == 'ASC' ? 'selected' : '' }}>ASC</option>
+      </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Apply</button>
+      <a class="btn btn-outline-secondary" href="{{ path('app_backoffice_investment_export_pdf', {search: search|default(''), sort: sort|default('id'), dir: dir|default('DESC')}) }}">Export PDF</a>
+    </div>
+  </form>
+  <p><a class="btn btn-light" href="{{ path('app_backoffice') }}">Dashboard</a></p>
+  <table class="table table-striped">
+    <thead><tr><th>ID</th><th>Investor</th><th>Project</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for investment in investments %}
+        <tr>
+          <td>{{ investment.id }}</td>
+          <td>{{ investment.investisseur ? investment.investisseur.displayName : 'N/A' }}</td>
+          <td>{{ investment.projet ? investment.projet.titre : 'N/A' }}</td>
+          <td>{{ investment.montant }}</td>
+          <td>{{ investment.statut }}</td>
+          <td>
+            <a class="btn btn-sm btn-warning" href="{{ path('app_backoffice_investment_edit', {id: investment.id}) }}">Edit</a>
+            <form method="post" action="{{ path('app_backoffice_investment_delete', {id: investment.id}) }}" style="display:inline-block" onsubmit="return confirm('Delete investment?');">
+              <input type="hidden" name="_token" value="{{ csrf_token('delete_investment_' ~ investment.id) }}">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6">No investments found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

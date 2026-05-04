@@ -1,0 +1,95 @@
+{% extends 'frontoffice/base.html.twig' %}
+
+{% block title %}My Investments{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bulma/bulma.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+  {% include 'frontoffice/_navbar.html.twig' %}
+
+  <section class="section">
+    <div class="container">
+      {% for message in app.flashes('success') %}
+        <div class="notification is-success">{{ message }}</div>
+      {% endfor %}
+      {% for message in app.flashes('warning') %}
+        <div class="notification is-warning">{{ message }}</div>
+      {% endfor %}
+
+      <h1 class="title is-3">My Investments</h1>
+
+      <form method="get" class="box" style="margin-bottom:1rem;">
+        <div class="columns is-multiline is-variable is-2">
+          <div class="column is-5-desktop is-12-tablet">
+            <label class="label">Search</label>
+            <input class="input" type="text" name="search" value="{{ search|default('') }}" placeholder="Project title, status, payment...">
+          </div>
+          <div class="column is-3-desktop is-6-tablet">
+            <label class="label">Sort by</label>
+            <div class="select is-fullwidth">
+              <select name="sort">
+                <option value="id" {% if (sort|default('id')) == 'id' %}selected{% endif %}>Newest</option>
+                <option value="montant" {% if (sort|default('id')) == 'montant' %}selected{% endif %}>Amount</option>
+                <option value="moyenPaiement" {% if (sort|default('id')) == 'moyenPaiement' %}selected{% endif %}>Payment</option>
+                <option value="statut" {% if (sort|default('id')) == 'statut' %}selected{% endif %}>Status</option>
+                <option value="dateInvestissement" {% if (sort|default('id')) == 'dateInvestissement' %}selected{% endif %}>Date</option>
+              </select>
+            </div>
+          </div>
+          <div class="column is-2-desktop is-6-tablet">
+            <label class="label">Direction</label>
+            <div class="select is-fullwidth">
+              <select name="dir">
+                <option value="DESC" {% if (dir|default('DESC')) == 'DESC' %}selected{% endif %}>DESC</option>
+                <option value="ASC" {% if (dir|default('DESC')) == 'ASC' %}selected{% endif %}>ASC</option>
+              </select>
+            </div>
+          </div>
+          <div class="column is-2-desktop is-12-tablet" style="display:flex; align-items:flex-end; gap:8px;">
+            <button class="button is-link" type="submit">Apply</button>
+            <a class="button is-light" href="{{ path('app_front_my_investments') }}">Reset</a>
+          </div>
+        </div>
+      </form>
+
+      <div style="margin-bottom:1rem;">
+        <a class="button is-dark is-small" href="{{ path('app_front_my_investments_export_pdf', {search: search|default(''), sort: sort|default('id'), dir: dir|default('DESC')}) }}">Export PDF</a>
+      </div>
+
+      <div class="box">
+        <table class="table is-fullwidth is-striped">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for investment in investments %}
+              <tr>
+                <td>
+                  <a href="{{ path('app_front_project_show', {id: investment.projet.id}) }}">{{ investment.projet.titre }}</a>
+                </td>
+                <td>{{ investment.montant }}</td>
+                <td>{{ investment.moyenPaiement }}</td>
+                <td>{{ investment.statut }}</td>
+                <td>{{ investment.dateInvestissement|date('Y-m-d H:i') }}</td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="5">No investments yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+{% endblock %}

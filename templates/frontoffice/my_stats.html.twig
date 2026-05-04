@@ -1,0 +1,133 @@
+{% extends 'frontoffice/base.html.twig' %}
+
+{% block title %}My Stats{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/bulma/bulma.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/plugins/fontawesome/css/all.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontoffice/css/style.css') }}">
+  <style>
+    .stats-page { max-width: 1120px; margin: 70px auto 30px; padding: 0 16px; }
+    .stats-card { border-radius: 14px; border: 1px solid #e7ecef; background: #fff; box-shadow: 0 8px 24px rgba(22, 34, 45, 0.07); }
+    .stats-label { color: #5f7282; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+    .stats-value { margin: 0; font-size: 28px; font-weight: 700; color: #1a2a33; }
+    .chart-title { font-size: 16px; font-weight: 700; color: #1a2a33; margin-bottom: 14px; }
+    .chart-wrap { position: relative; min-height: 300px; }
+  </style>
+{% endblock %}
+
+{% block body %}
+  {% include 'frontoffice/_navbar.html.twig' %}
+
+  <div class="stats-page">
+    <div style="margin-bottom:18px;">
+      <h1 class="title is-4 mb-2">My Artist Stats</h1>
+      <p class="has-text-grey">Track your project performance and investment trends.</p>
+    </div>
+
+    <div class="columns is-multiline is-variable is-3 mb-2">
+      <div class="column is-3-desktop is-6-tablet">
+        <div class="stats-card p-4">
+          <p class="stats-label">My Projects</p>
+          <p class="stats-value">{{ projectsCount }}</p>
+        </div>
+      </div>
+      <div class="column is-3-desktop is-6-tablet">
+        <div class="stats-card p-4">
+          <p class="stats-label">Project Investments</p>
+          <p class="stats-value">{{ investmentsCount }}</p>
+        </div>
+      </div>
+      <div class="column is-3-desktop is-6-tablet">
+        <div class="stats-card p-4">
+          <p class="stats-label">Total Goal</p>
+          <p class="stats-value">{{ totalGoal|number_format(2, '.', ' ') }}</p>
+        </div>
+      </div>
+      <div class="column is-3-desktop is-6-tablet">
+        <div class="stats-card p-4">
+          <p class="stats-label">Total Raised</p>
+          <p class="stats-value">{{ totalRaised|number_format(2, '.', ' ') }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-multiline is-variable is-3">
+      <div class="column is-6-desktop">
+        <div class="stats-card p-4">
+          <h2 class="chart-title">My Projects by Status</h2>
+          <div class="chart-wrap"><canvas id="artistStatusChart"></canvas></div>
+        </div>
+      </div>
+      <div class="column is-6-desktop">
+        <div class="stats-card p-4">
+          <h2 class="chart-title">Investments in My Projects (Last 6 Months)</h2>
+          <div class="chart-wrap"><canvas id="artistInvestmentTrendChart"></canvas></div>
+        </div>
+      </div>
+      <div class="column is-12">
+        <div class="stats-card p-4">
+          <h2 class="chart-title">Top My Projects by Funding</h2>
+          <div class="chart-wrap"><canvas id="artistTopProjectsChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const statusLabels = {{ statusLabels|json_encode|raw }};
+    const statusValues = {{ statusValues|json_encode|raw }};
+    const investmentMonths = {{ investmentMonths|json_encode|raw }};
+    const investmentMonthValues = {{ investmentMonthValues|json_encode|raw }};
+    const topProjectLabels = {{ topProjectLabels|json_encode|raw }};
+    const topProjectValues = {{ topProjectValues|json_encode|raw }};
+
+    new Chart(document.getElementById('artistStatusChart'), {
+      type: 'doughnut',
+      data: {
+        labels: statusLabels,
+        datasets: [{
+          data: statusValues,
+          backgroundColor: ['#3b82f6', '#0ea5e9', '#22c55e', '#ef4444']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    new Chart(document.getElementById('artistInvestmentTrendChart'), {
+      type: 'line',
+      data: {
+        labels: investmentMonths,
+        datasets: [{
+          label: 'Investment amount',
+          data: investmentMonthValues,
+          borderColor: '#14b8a6',
+          backgroundColor: 'rgba(20, 184, 166, 0.16)',
+          fill: true,
+          tension: 0.35
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    new Chart(document.getElementById('artistTopProjectsChart'), {
+      type: 'bar',
+      data: {
+        labels: topProjectLabels,
+        datasets: [{
+          label: 'Collected amount',
+          data: topProjectValues,
+          backgroundColor: '#f59e0b'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y'
+      }
+    });
+  </script>
+{% endblock %}

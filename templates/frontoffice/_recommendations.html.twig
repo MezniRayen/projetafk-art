@@ -1,0 +1,25 @@
+<div class="section" style="margin-top:2rem;">
+  <div class="container">
+    <div class="box">
+      <h3 class="title is-5">Recommended for you</h3>
+      <div class="columns is-multiline">
+        {% for project in recommendations %}
+          <div class="column is-4-desktop is-6-tablet">
+            <div class="card">
+              <div class="card-content">
+                <p class="title is-6">{{ project.titre }}</p>
+                <p class="subtitle is-7">{{ project.artiste ? project.artiste.displayName : 'Unknown' }}</p>
+                <p style="font-size:13px; color:#555">{{ project.description|slice(0, 120) }}{% if project.description|length > 120 %}...{% endif %}</p>
+                <div style="margin-top:8px">
+                  <a class="button is-small is-link" href="{{ path('app_front_project_show', {id: project.id}) }}">View details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="column is-12"><p>No recommendations available right now.</p></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

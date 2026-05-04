@@ -1,0 +1,132 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}Backoffice Dashboard{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" crossorigin href="{{ asset('backoffice/assets/css/index.css') }}">
+  <style>
+    .stats-card { border: 0; border-radius: 14px; box-shadow: 0 8px 24px rgba(27, 39, 51, 0.08); }
+    .stats-label { color: #6b7b88; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+    .stats-value { font-size: 28px; font-weight: 700; margin: 0; }
+    .chart-card { border: 0; border-radius: 14px; box-shadow: 0 8px 24px rgba(27, 39, 51, 0.08); }
+    .chart-wrap { position: relative; min-height: 300px; }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="h3 mb-1">Admin Analytics Dashboard</h1>
+      <p class="text-secondary mb-0">Global statistics and chart insights for projects and investments.</p>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card stats-card p-3">
+        <p class="stats-label">Users</p>
+        <p class="stats-value">{{ usersCount }}</p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card stats-card p-3">
+        <p class="stats-label">Projects</p>
+        <p class="stats-value">{{ projectsCount }}</p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card stats-card p-3">
+        <p class="stats-label">Investments</p>
+        <p class="stats-value">{{ investmentsCount }}</p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card stats-card p-3">
+        <p class="stats-label">Total Raised</p>
+        <p class="stats-value">{{ totalRaised|number_format(2, '.', ' ') }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-lg-6 col-12">
+      <div class="card chart-card p-3">
+        <h2 class="h6 mb-3">Projects by Status</h2>
+        <div class="chart-wrap"><canvas id="projectStatusChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-12">
+      <div class="card chart-card p-3">
+        <h2 class="h6 mb-3">Investments (Last 6 Months)</h2>
+        <div class="chart-wrap"><canvas id="investmentTrendChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12">
+      <div class="card chart-card p-3">
+        <h2 class="h6 mb-3">Top Funded Projects</h2>
+        <div class="chart-wrap"><canvas id="topProjectsChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const projectStatusLabels = {{ projectStatusLabels|json_encode|raw }};
+    const projectStatusValues = {{ projectStatusValues|json_encode|raw }};
+    const investmentMonths = {{ investmentMonths|json_encode|raw }};
+    const investmentMonthValues = {{ investmentMonthValues|json_encode|raw }};
+    const topProjectLabels = {{ topProjectLabels|json_encode|raw }};
+    const topProjectValues = {{ topProjectValues|json_encode|raw }};
+
+    new Chart(document.getElementById('projectStatusChart'), {
+      type: 'doughnut',
+      data: {
+        labels: projectStatusLabels,
+        datasets: [{
+          data: projectStatusValues,
+          backgroundColor: ['#36a2eb', '#4bc0c0', '#22c55e', '#f87171']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    new Chart(document.getElementById('investmentTrendChart'), {
+      type: 'line',
+      data: {
+        labels: investmentMonths,
+        datasets: [{
+          label: 'Investment amount',
+          data: investmentMonthValues,
+          borderColor: '#6366f1',
+          backgroundColor: 'rgba(99, 102, 241, 0.16)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    new Chart(document.getElementById('topProjectsChart'), {
+      type: 'bar',
+      data: {
+        labels: topProjectLabels,
+        datasets: [{
+          label: 'Collected amount',
+          data: topProjectValues,
+          backgroundColor: '#0ea5e9'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y'
+      }
+    });
+  </script>
+{% endblock %}

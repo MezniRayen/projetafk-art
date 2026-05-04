@@ -1,0 +1,68 @@
+<div id="navbar" class="navigation py-4">
+  <div class="container">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="{{ path('app_frontoffice') }}">
+          <img src="{{ asset('logo.jpg') }}" alt="Afk'art logo" style="max-height:48px; width:auto;">
+        </a>
+        <button role="button" class="navbar-burger burger" data-hidden="true" data-target="navigation">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="navbar-menu" id="navigation">
+        <ul class="navbar-start ml-auto">
+          <li class="navbar-item">
+            <a class="navbar-link" href="{{ path('app_frontoffice') }}">Home</a>
+          </li>
+
+          {% if app.user and (app.user.userType == 'ARTIST' or is_granted('ROLE_ADMIN')) %}
+            <li class="navbar-item">
+              <a class="navbar-link" href="{{ path('app_front_my_projects') }}">My Projects</a>
+            </li>
+            <li class="navbar-item">
+              <a class="navbar-link" href="{{ path('app_front_my_stats') }}">My Stats</a>
+            </li>
+            <li class="navbar-item">
+              <a class="navbar-link" href="{{ path('app_front_projects') }}">All Projects</a>
+            </li>
+          {% endif %}
+
+          {% if app.user and (app.user.userType == 'INVESTOR' or is_granted('ROLE_ADMIN')) %}
+            <li class="navbar-item">
+              <a class="navbar-link" href="{{ path('app_front_projects') }}">Projects</a>
+            </li>
+            <li class="navbar-item">
+              <a class="navbar-link" href="{{ path('app_front_my_investments') }}">My Investments</a>
+            </li>
+          {% endif %}
+        </ul>
+
+        <ul class="navbar-end ml-0">
+          {% if app.user %}
+            <li class="navbar-item">
+              <a href="{{ path('app_front_favorites') }}" class="btn btn-solid-border">Favorites</a>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+              <li class="navbar-item">
+                <a href="{{ path('app_backoffice') }}" class="btn btn-solid-border">Backoffice</a>
+              </li>
+            {% endif %}
+            <li class="navbar-item">
+              <a href="{{ path('app_logout') }}" class="btn btn-main">Logout</a>
+            </li>
+          {% else %}
+            <li class="navbar-item">
+              <a href="{{ path('app_login') }}" class="btn btn-main">Login</a>
+            </li>
+            <li class="navbar-item">
+              <a href="{{ path('app_register') }}" class="btn btn-solid-border">Register</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>

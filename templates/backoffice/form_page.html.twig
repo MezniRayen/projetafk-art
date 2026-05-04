@@ -1,0 +1,91 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" crossorigin href="{{ asset('backoffice/assets/css/index.css') }}">
+  <style>
+    .admin-form-shell {
+      background: #fff;
+      border: 1px solid #d9e3ea;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    }
+
+    .admin-form-shell > div {
+      margin-bottom: 12px;
+    }
+
+    .admin-form-shell label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .admin-form-shell input,
+    .admin-form-shell select,
+    .admin-form-shell textarea {
+      width: 100%;
+      border: 1px solid #c7d4dc;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .admin-form-shell input:focus,
+    .admin-form-shell select:focus,
+    .admin-form-shell textarea:focus {
+      outline: none;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    }
+
+    .admin-form-errors,
+    .admin-form-shell ul {
+      color: #c62828;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 6px;
+      padding-left: 18px;
+    }
+
+    .admin-form-errors {
+      border: 1px solid rgba(198, 40, 40, 0.24);
+      background: rgba(198, 40, 40, 0.08);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="container" style="padding: 24px 0; max-width: 800px;">
+  <h1>{{ title }}</h1>
+  {{ form_start(form, {'attr': {'id': 'admin-form', 'novalidate': 'novalidate', 'class': 'admin-form-shell'}}) }}
+    {% if form.vars.errors|length > 0 %}
+      <div class="admin-form-errors">{{ form_errors(form) }}</div>
+    {% endif %}
+    {{ form_widget(form) }}
+    <div style="margin-top: 16px;">
+      <button class="btn btn-primary">Save</button>
+      <a class="btn btn-light" href="{{ path('app_backoffice') }}">Dashboard</a>
+    </div>
+  {{ form_end(form) }}
+</div>
+<script>
+document.getElementById('admin-form')?.addEventListener('submit', function (e) {
+  const blocked = /<[^>]*>/;
+  const fields = this.querySelectorAll('input[type="text"], input[type="password"], textarea');
+  for (const field of fields) {
+    if (blocked.test(field.value) || (field.hasAttribute('required') && field.value.trim() === '')) {
+      e.preventDefault();
+      alert('Empty values and HTML tags are not allowed.');
+      field.focus();
+      return;
+    }
+  }
+});
+</script>
+{% endblock %}
